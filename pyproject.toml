@@ -19,6 +19,7 @@ python-multipart = "^0.0.6"
 fastapi-mail = "^1.4.1"
 fastapi-limiter = "^0.1.5"
 cloudinary = "^1.36.0"
+psycopg2 = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "^7.2.6"
