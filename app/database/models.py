@@ -18,11 +18,11 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-picture_m2m_tag = Table(
-    "picture_m2m_tag",
+image_m2m_tag = Table(
+    "image_m2m_tag",
     Base.metadata,
     Column("id", Integer, primary_key=True),
-    Column("picture_id", Integer, ForeignKey("pictures.id", ondelete="CASCADE")),
+    Column("image_id", Integer, ForeignKey("images.id", ondelete="CASCADE")),
     Column("tag_id", Integer, ForeignKey("tags.id", ondelete="CASCADE")),
 )
 
@@ -33,23 +33,23 @@ class Role(enum.Enum):
     user: str = "user"
 
 
-class Picture(Base):
-    __tablename__ = "pictures"
+class Image(Base):
+    __tablename__ = "images"
     id = Column(Integer, primary_key=True)
     description = Column(String(255))
     image = Column(LargeBinary)
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
-    user = relationship("User", backref="pictures")
-    tags = relationship("Tag", secondary=picture_m2m_tag, backref="pictures")
+    user = relationship("User", backref="images")
+    tags = relationship("Tag", secondary=image_m2m_tag, backref="images")
 
 
-class Tag(Base):
+class ImageTag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     tag_name = Column(String(25), unique=True)
 
 
-class Comment(Base):
+class ImageComment(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True)
     comment_description = Column(String(255))
