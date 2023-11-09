@@ -55,6 +55,7 @@ class Comment(Base):
     comment_description = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    user = relationship("User", backref="comments")
 
 
 class User(Base):
