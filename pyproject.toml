@@ -6,7 +6,7 @@ authors = ["Team lead - Валерій Рішняк, Scrum master - Viktoriia, D
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 fastapi = "^0.103.1"
 uvicorn = {extras = ["standart"], version = "^0.23.2"}
 sqlalchemy = "^2.0.21"
