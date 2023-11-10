@@ -17,17 +17,16 @@ class ImageTagResponse(ImageTagModel):
 class PhotoBase(BaseModel):
      url: HttpUrl
      name: str
+     orm_mode = True
+
+
 
 class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
     tags: List[ImageTagResponse]
     id  : int
-     
+    
     class Config:
         from_attributes = True
-
-
-
-
 
