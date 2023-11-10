@@ -37,8 +37,7 @@ class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
     description = Column(String(255))
-    url = str
-    name = Column(LargeBinary)
+    image = Column(LargeBinary)
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
