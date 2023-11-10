@@ -9,6 +9,8 @@ __pycache__/
 # Distribution / packaging
 poetry.lock
 .vscode/
+docker-compose.yml
+postgres-data/
 .Python
 build/
 develop-eggs/
