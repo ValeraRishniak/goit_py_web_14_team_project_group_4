@@ -3,16 +3,15 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 
-class TagPhoto(BaseModel):
-    name: str   = Field(max_length=25)
-    
-class TagPhotoResponse(TagPhoto):
+class ImageTagModel(BaseModel):
+    tag_name: str = Field(max_length=25)
+
+
+class ImageTagResponse(ImageTagModel):
     id: int
 
     class Config:
         from_attributes = True
-
-
 
 
 class PhotoBase(BaseModel):
@@ -22,7 +21,7 @@ class PhotoBase(BaseModel):
 class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
-    tags: List[TagPhotoResponse]
+    tags: List[ImageTagResponse]
     id  : int
      
     class Config:
