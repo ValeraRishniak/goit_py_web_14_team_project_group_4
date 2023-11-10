@@ -11,19 +11,22 @@ class ImageTagResponse(ImageTagModel):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PhotoBase(BaseModel):
-    url: HttpUrl
-    name: str
+     url: HttpUrl
+     name: str
+     orm_mode = True
+
 
 
 class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
     tags: List[ImageTagResponse]
-    id: int
-
+    id  : int
+    
     class Config:
         from_attributes = True
+
