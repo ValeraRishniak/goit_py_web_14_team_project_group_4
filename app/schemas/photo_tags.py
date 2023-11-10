@@ -17,7 +17,7 @@ class ImageTagResponse(ImageTagModel):
 class PhotoBase(BaseModel):
      url: HttpUrl
      name: str
-     orm_mode = True
+     from_attributes = True
 
 
 
