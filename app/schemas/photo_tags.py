@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 from app.schemas.tags import ImageTagResponse
+
 # class TagPhoto(BaseModel):
 #     name: str   = Field(max_length=25)
     
@@ -11,6 +12,9 @@ from app.schemas.tags import ImageTagResponse
 
 #     class Config:
 #         from_attributes = True
+
+
+
 
 class PhotoBase(BaseModel):
      url: HttpUrl
