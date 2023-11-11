@@ -19,7 +19,7 @@ async def get_photo(photo_id: int, user: User, db: Session):
 
 
 async def add_photo(body: PhotoModels, user: User, db: Session) -> Image:
-    photo = Image( description=body.description, image=body.photo,  tags=body.tags, user_id=user.id)
+    photo = Image( description=body.description, image=body.url,  tags=body.tags, user_id=user.id, user=user.username)
     db.add(photo)
     db.commit()
     db.refresh(photo)
@@ -27,7 +27,7 @@ async def add_photo(body: PhotoModels, user: User, db: Session) -> Image:
 
 
 async def update_description( photo_id: int, body: PhotoModels, user: User, db: Session) -> Image | None:
-    photo = db.query(Image).filter(and_(Image.id==photo_id,  Image.user_id == user.id)).first()
+    photo = db.query(Image).filter_by(id=photo_id).first()
     if photo:
         photo.description = body.description
         db.commit()

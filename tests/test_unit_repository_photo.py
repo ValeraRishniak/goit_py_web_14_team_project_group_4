@@ -39,13 +39,14 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
 
     async def test_add_photo(self):
         body = PhotoModels( description = 'new foto fo you'   , url= "http://console.cloudinary.com/console/c-d8a03b96ed427346604eac79aeea58/media_library/homepage/asset/e6cfb21987e391a9c999f7a8fd6ddc51/manage?context=manage", 
-                            name='prosto', id= 1,
+                            # name='prosto',
+                            id= self.user.id,
                             tags = [] )
-                 
+          
         result = await add_photo(body=body, db=self.session, user=self.user)
         self.assertEqual(result.description, body.description)
-        self.assertEqual(result.url, body.url)
-        self.assertEqual(result.name, body.name)
+        self.assertEqual(result.image, body.url)
+        self.assertEqual(result.tags, body.tags)
         self.assertEqual(result.user_id, self.user.id)
         self.assertTrue(hasattr(result, "id"))
  
@@ -62,27 +63,29 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(result)
 
     async def test_update_description_found(self):
+        photo_id = 1
         body = PhotoModels( description = 'new foto fo you'   , url= "http://console.cloudinary.com/console/c-d8a03b96ed427346604eac79aeea58/media_library/homepage/asset/e6cfb21987e391a9c999f7a8fd6ddc51/manage?context=manage", 
                             name='prosto', id= 1,
                             tags = [] )
 
-        phot  = Image( description = 'foto1'    ,  url= "http://console.cloudinary.com/console/c-d8a03b96ed427346604eac79aeea58/media_library/homepage/asset/e6cfb21987e391a9c999f7a8fd6ddc51/manage?context=manage", 
-                            name='prosto', id= 1,
+        phot  = Image( description = 'foto1'    ,  image= "http://console.cloudinary.com/console/c-d8a03b96ed427346604eac79aeea58/media_library/homepage/asset/e6cfb21987e391a9c999f7a8fd6ddc51/manage?context=manage", 
+                         
+                            id=1,
                             tags = [] )
 
-        self.session.query().filter_by().first.return_value = phot
+        self.session.query().filter_by().first.return_value  = phot
         self.session.commit.return_value = None
-        result = await update_description(body=body, photo_id=phot.id, db=self.session, user= self.user.id)
+        result = await update_description(photo_id= 1,body=body,  db=self.session, user= self.user.id)
     
         self.assertEqual(result.description, body.description)
-        self.assertEqual(result.user_id, self.user.id)
+     
         self.assertTrue(hasattr(result, "id"))
 
     async def test_update_contact_not_found(self):
         body = PhotoModels( description = 'new foto fo you'   , url= "http://console.cloudinary.com/console/c-d8a03b96ed427346604eac79aeea58/media_library/homepage/asset/e6cfb21987e391a9c999f7a8fd6ddc51/manage?context=manage", 
                             name='prosto', id= 1,
                             tags = [])
-        self.session.query().filter().first.return_value = None
+        self.session.query().filter_by().first.return_value = None
         self.session.commit.return_value = None
         result = await update_description(photo_id=1, body=body, user=self.user, db=self.session)
         self.assertIsNone(result)

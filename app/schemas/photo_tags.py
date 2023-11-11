@@ -16,7 +16,7 @@ class ImageTagResponse(ImageTagModel):
 
 class PhotoBase(BaseModel):
      url: str
-     name: str
+     name: str | None = None
 
 class PhotoModels(PhotoBase):
     description: str | None = None
