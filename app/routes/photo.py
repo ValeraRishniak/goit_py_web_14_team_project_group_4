@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
+
 from app.schemas.photo_tags import  TagPhoto, TagPhotoResponse, PhotoBase, PhotoModels
 from app.repository import photo as repository_photo
 
@@ -14,10 +15,12 @@ from app.services.auth import auth_service
 router = APIRouter(prefix='/photos', tags=["photos"])
 
 
+
 @router.get("/", response_model=List[PhotoModels])
 async def see_potos(skip: int = 0, limit: int = 25, db: Session = Depends(get_db),  current_user: User = Depends(auth_service.get_current_user)):
     photos = await repository_photo.get_photos(skip, limit, current_user, db)
     return photos
+
 
 
 @router.get("/{photo_id}", response_model=PhotoModels)
@@ -26,6 +29,7 @@ async def see_photo(photo_id: int, db: Session = Depends(get_db), current_user: 
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="By id not found photo")
     return photo
+
 
 
 @router.post("/", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
@@ -40,6 +44,7 @@ async def update_description(body: PhotoModels, photo_id: int, db: Session = Dep
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Photo by id is  not found")
     return photo
+
 
 @router.delete("/{photo_id}", response_model=PhotoModels)
 async def remove_photo(photo_id: int, db: Session = Depends(get_db),

@@ -18,16 +18,13 @@ class PhotoBase(BaseModel):
      url: str
      name: str | None = None
 
+
 class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
     tags: List[ImageTagResponse] | None = None
     id  : int
-     
+    
     class Config:
         from_attributes = True
-
-
-
-
 

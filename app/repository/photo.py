@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, extract, or_, select
 
 from app.database.models import   User, Image
+
 from app.schemas.photo_tags import  PhotoModels, PhotoBase
+
 
 
 async def get_photos(  skip: int, limit: int,user: User, db: Session) -> List[Image]:
@@ -18,12 +20,14 @@ async def get_photo(photo_id: int, user: User, db: Session):
 
 
 
+
 async def add_photo(body: PhotoModels, user: User, db: Session) -> Image:
     photo = Image( description=body.description, image=body.url,  tags=body.tags, user_id=user.id, user=user.username)
     db.add(photo)
     db.commit()
     db.refresh(photo)
     return photo
+
 
 
 async def update_description( photo_id: int, body: PhotoModels, user: User, db: Session) -> Image | None:
