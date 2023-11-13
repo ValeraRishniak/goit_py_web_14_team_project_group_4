@@ -15,16 +15,14 @@ class ImageTagResponse(ImageTagModel):
 
 
 class PhotoBase(BaseModel):
-     url: HttpUrl
-     name: str
-     orm_mode = True
-
+     url: str
+     name: str | None = None
 
 
 class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
-    tags: List[ImageTagResponse]
+    tags: List[ImageTagResponse] | None = None
     id  : int
     
     class Config:
