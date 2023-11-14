@@ -19,15 +19,20 @@ router = APIRouter(prefix='/photos', tags=["photos"])
 
 
 @router.get("/", response_model=List[PhotoModels])
-async def see_potos(skip: int = 0, limit: int = 25, db: Session = Depends(get_db),  current_user: User = Depends(auth_service.get_current_user)):
-    photos = await repository_photo.get_photos(skip, limit, current_user, db)
+async def see_potos(skip: int = 0, limit: int = 25, db: Session = Depends(get_db),  
+                     # current_user: User = Depends(auth_service.get_current_user)
+                    ):
+    photos = await repository_photo.get_photos(skip, limit, # current_user,
+                                               db)
     return photos
 
 
 
 @router.get("/{photo_id}", response_model=PhotoModels)
-async def see_photo(photo_id: int, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
-    photo = await repository_photo.get_photo(photo_id, current_user, db)
+async def see_photo(photo_id: int, db: Session = Depends(get_db), #current_user: User = Depends(auth_service.get_current_user)
+                    ):
+    photo = await repository_photo.get_photo(photo_id, #  current_user, 
+                                             db)
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="By id not found photo")
     return photo
@@ -35,15 +40,19 @@ async def see_photo(photo_id: int, db: Session = Depends(get_db), current_user: 
 
 
 @router.post("/", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
-async def add_photo( body: PhotoModels, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user), file: UploadFile= File(...)  ):
+async def add_photo( body: PhotoModels, db: Session = Depends(get_db), #  current_user: User = Depends(auth_service.get_current_user), 
+                    file: UploadFile=File(...)):
     result = cloudinary.uploader.upload(file.file)
     url = result.get("url")
-    return await repository_photo.add_photo(body, current_user, db, url),        
+    return await repository_photo.add_photo(body, # current_user,
+                                            db, url),        
 
 @router.put("/{photo_id}", response_model=PhotoModels)
 async def update_description(body: PhotoModels, photo_id: int, db: Session = Depends(get_db),
-                         current_user: User = Depends(auth_service.get_current_user)):
-    photo = await repository_photo.update_description(photo_id, body, current_user, db)
+                         #current_user: User = Depends(auth_service.get_current_user)
+                         ):
+    photo = await repository_photo.update_description(photo_id, body, # current_user,
+                                                      db)
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Photo by id is  not found")
     return photo
@@ -51,8 +60,10 @@ async def update_description(body: PhotoModels, photo_id: int, db: Session = Dep
 
 @router.delete("/{photo_id}", response_model=PhotoModels)
 async def remove_photo(photo_id: int, db: Session = Depends(get_db),
-                         current_user: User = Depends(auth_service.get_current_user)):
-    photo = await repository_photo.remove_photo(photo_id, current_user, db)
+                       #  current_user: User = Depends(auth_service.get_current_user)
+                         ):
+    photo = await repository_photo.remove_photo(photo_id, # current_user,
+                                                db)
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Photo not found")
     return photo

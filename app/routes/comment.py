@@ -15,31 +15,40 @@ router = APIRouter(prefix="/comments", tags=["comments"])
 
 
 @router.post("/", response_model=CommentList)
-async def create_comment( image_id: int, body: CommentBase, db: Session = Depends(get_db),
-                       current_user: User = Depends(auth_service.get_current_user)):
-    comment = await repository_comment.create_comment( body, current_user, db, image_id)
+async def create_comment( image_id: int, 
+                         body: CommentBase, db: Session = Depends(get_db),
+                      # current_user: User = Depends(auth_service.get_current_user)
+                       ):
+    comment = await repository_comment.create_comment( body, #current_user,
+                                                      db, image_id)
 
     return comment
 
 @router.get("/{comment_id}", response_model=CommentList)
 async def get_comment(comment_id: int, db: Session = Depends(get_db),
-                       current_user: User = Depends(auth_service.get_current_user)):
-    comment = await repository_comment.get_comment(comment_id, current_user, db)
+                     #  current_user: User = Depends(auth_service.get_current_user)
+                       ):
+    comment = await repository_comment.get_comment(comment_id, # current_user,
+                                                   db)
     if comment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment for photo not found")
     return comment
 
 @router.put("/update", response_model=CommentList)
 async def update_comment(comment_id: int, body: CommentBase, db: Session = Depends(get_db),
-                       current_user: User = Depends(auth_service.get_current_user)):
-    comment = await repository_comment.update_comment( body, comment_id, current_user, db)
+                    #   current_user: User = Depends(auth_service.get_current_user)
+                       ):
+    comment = await repository_comment.update_comment( body, comment_id, # current_user, 
+                                                      db)
     if comment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment  not found")
     return comment  
 
  
 @router.delete("/delete", response_model=CommentList)
-async def delete_comment(comment_id: int, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+async def delete_comment(comment_id: int, db: Session = Depends(get_db), 
+                     #    current_user: User = Depends(auth_service.get_current_user)
+                         ):
     comment = await repository_comment.delete_comment(comment_id, db)
     if not comment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
@@ -50,13 +59,15 @@ async def delete_comment(comment_id: int, db: Session = Depends(get_db), current
 
 @router.get("/comments/{photo_id}", response_model=CommentList)
 async def get_photo_comments(image_id: int, limit: int = 0, offset: int = 10, db: Session = Depends(get_db),
-                       current_user: User = Depends(auth_service.get_current_user)):
+                     #  current_user: User = Depends(auth_service.get_current_user)
+                       ):
     photo_comments = await repository_comment.get_photo_comments(limit,offset,image_id,db)
     return {'this photo contains the following comments': photo_comments} 
 
 @router.get("/comments/{user_id}", response_model=CommentList)
 async def get_user_comments(user_id: int, limit: int = 0, offset: int = 10, db: Session = Depends(get_db),
-                       current_user: User = Depends(auth_service.get_current_user)):
+                 #      current_user: User = Depends(auth_service.get_current_user)
+                       ):
     comments_from_user = await repository_comment.get_user_comments(limit, offset, user_id, db)
     return {"this user left such comments": comments_from_user}
 
