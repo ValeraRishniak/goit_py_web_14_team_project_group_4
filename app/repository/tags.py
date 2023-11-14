@@ -10,28 +10,41 @@ async def get_tags(skip: int, limit: int, db: Session) -> List[ImageTag]:
     return db.query(ImageTag).offset(skip).limit(limit).all()
 
 
-async def get_tag(tag_id: int, db: Session) -> ImageTag:
+async def get_tag_by_id(tag_id: int, db: Session) -> ImageTag:
     return db.query(ImageTag).filter(ImageTag.id == tag_id).first()
 
 
-async def create_tag(body: ImageTagModel, db: Session) -> ImageTag:
-    tag = ImageTag(tag_name=body.tag_name)
-    db.add(tag)
-    db.commit()
-    db.refresh(tag)
-    return tag
+async def get_tags_by_list_values(
+    values: list[ImageTagModel], db: Session
+) -> List[ImageTag]:
+    return (
+        db.query(ImageTag)
+        .filter(ImageTag.tag_name.in_([value.tag_name for value in values]))
+        .all()
+    )
+
+
+async def create_tag(values: list[ImageTagModel], db: Session) -> ImageTag:
+    bd_tags = await get_tags_by_list_values(values, db)
+    for value in values:
+        if not any([tag.tag_name == value.tag_name for tag in bd_tags]):
+            new_tag = ImageTag(tag_name=value.tag_name)
+            db.add(new_tag)
+            db.commit()
+    return await get_tags_by_list_values(values, db)
 
 
 async def update_tag(tag_id: int, body: ImageTagModel, db: Session) -> ImageTag | None:
-    tag = db.query(ImageTag).filter(ImageTag.id == tag_id).first()
+    tag = await get_tag_by_id(tag_id, db)
     if tag:
         tag.tag_name = body.tag_name
         db.commit()
+        db.refresh(tag)
     return tag
 
 
 async def remove_tag(tag_id: int, db: Session) -> ImageTag | None:
-    tag = db.query(ImageTag).filter(ImageTag.id == tag_id).first()
+    tag = await get_tag_by_id(tag_id, db)
     if tag:
         db.delete(tag)
         db.commit()
