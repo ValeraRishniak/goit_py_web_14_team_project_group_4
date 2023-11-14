@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
+from fastapi import APIRouter, HTTPException, Depends, status, File, UploadFile
 
 
 class ImageTagModel(BaseModel):
@@ -15,7 +16,6 @@ class ImageTagResponse(ImageTagModel):
 
 
 class PhotoBase(BaseModel):
-     url: str
      name: str | None = None
 
 
@@ -23,6 +23,7 @@ class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
     tags: List[ImageTagResponse] | None = None
+    created_date: Optional[datetime.datetime]
     id  : int
     
     class Config:

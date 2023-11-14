@@ -5,9 +5,9 @@ from typing import List
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 from app.database.db import get_db
-from app.models import User
+from app.database.models  import User
 from app.database import SessionLocal
-from models import PhotoModels
+from app.schemas.photo_tags import PhotoModels
 
 SECRET_KEY = "Photo_SHAKE_123"
 
