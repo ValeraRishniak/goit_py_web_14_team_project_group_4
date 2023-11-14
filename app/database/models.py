@@ -14,18 +14,22 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
+
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import URLType, EmailType
 from sqlalchemy.orm import DeclarativeBase
- 
-class Base(DeclarativeBase): pass
+
+
+class Base(DeclarativeBase):
+    pass
+
 
 # Base = declarative_base()
 
 cloudinary.config(
-    cloud_name= "hnduusros",
-    api_key= "927131722149478",
-    api_secret ="he5lFnOeoeRDBmV9z9QKCTxhLn0"
+    cloud_name="hnduusros",
+    api_key="927131722149478",
+    api_secret="he5lFnOeoeRDBmV9z9QKCTxhLn0",
 )
 
 image_m2m_tag = Table(
@@ -44,6 +48,7 @@ image_m2m_comment = Table(
     Column("comment_id", Integer, ForeignKey("comments.id", ondelete="CASCADE")),
 )
 
+
 class Role(enum.Enum):
     admin: str = "admin"
     moderator: str = "moderator"
@@ -59,7 +64,9 @@ class Image(Base):
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
-    comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
+    comment = relationship(
+        "ImageComment", secondary=image_m2m_comment, backref="images"
+    )
 
 
 class ImageTag(Base):
@@ -76,7 +83,7 @@ class ImageComment(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="comments")
-    image_id = Column(Integer,ForeignKey("images.id"))
+    image_id = Column(Integer, ForeignKey("images.id"))
 
 
 class User(Base):
@@ -90,5 +97,3 @@ class User(Base):
     refresh_token = Column(String(255), nullable=True)
     role = Column("role", Enum(Role), default=Role.user)
     confirmed = Column(Boolean, default=False)
-
-    
