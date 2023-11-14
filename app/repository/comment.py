@@ -9,8 +9,8 @@ from app.database.models import ImageComment
 from app.schemas.comment import  CommentBase
  
  
-async def create_comment(db: Session, body: CommentBase ):
-    db_comment = ImageComment ( comment_description=body.comment_description )
+async def create_comment(db: Session, body: CommentBase,  image_id: int ):
+    db_comment = ImageComment ( comment_description=body.comment_description, image_id=image_id )
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)
@@ -46,8 +46,8 @@ async def delete_comment(comment_id: int, db: Session):
             raise e
         
 
-async def get_photo_comments(offset: int, limit: int, photo_id: int, db: Session):
-    photo_comments = (select(ImageComment).filter(ImageComment.image_id == photo_id).offset(offset).limit(limit))
+async def get_photo_comments(offset: int, limit: int, image_id: int, db: Session):
+    photo_comments = (select(ImageComment).filter(ImageComment.image_id == image_id).offset(offset).limit(limit))
     comments = await db.execute(photo_comments)
     result = comments.scalars().all()
     return result
