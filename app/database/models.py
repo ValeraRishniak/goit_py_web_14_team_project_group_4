@@ -56,6 +56,7 @@ class Image(Base):
     description = Column(String(255))
     image = Column(LargeBinary)
     url = Column(URLType)
+    created_at = Column(DateTime, default=func.now())
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")

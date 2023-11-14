@@ -4,7 +4,7 @@ import datetime
 from fastapi import Body
 
 class CommentBase(BaseModel):
-    name:str
+    
     comment_description:str
    
 

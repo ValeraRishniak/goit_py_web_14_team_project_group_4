@@ -23,7 +23,7 @@ class PhotoModels(PhotoBase):
     description: str | None = None
     photo: PhotoBase | None = None
     tags: List[ImageTagResponse] | None = None
-    created_date: Optional[datetime.datetime]
+    created_date: Optional[datetime ]
     id  : int
     
     class Config:
