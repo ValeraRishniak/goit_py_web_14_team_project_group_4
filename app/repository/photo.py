@@ -15,14 +15,14 @@ async def get_photos(  skip: int, limit: int,user: User, db: Session) -> List[Im
     
 
 async def get_photo(photo_id: int, user: User, db: Session):
-    contact = db.query(Image).filter_by(and_(Image.id == photo_id, Image.user_id == user.id)).first()
-    return contact
+    photo = db.query(Image).filter_by(and_(Image.id == photo_id, Image.user_id == user.id)).first()
+    return photo
 
 
 
 
-async def add_photo(body: PhotoModels, user: User, db: Session) -> Image:
-    photo = Image( description=body.description, image=body.url,  tags=body.tags, user_id=user.id, user=user.username)
+async def add_photo(  body: PhotoModels, user: User, db: Session, url:str) -> Image:
+    photo = Image( description=body.description, image=body.name,  tags=body.tags, user_id=user.id, user=user.username, url= url)
     db.add(photo)
     db.commit()
     db.refresh(photo)

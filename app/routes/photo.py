@@ -1,11 +1,13 @@
 from typing import List
+import cloudinary
+import cloudinary.uploader
 
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, File, UploadFile
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
 
-from app.schemas.photo_tags import  TagPhoto, TagPhotoResponse, PhotoBase, PhotoModels
+from app.schemas.photo_tags import  ImageTagModel, ImageTagResponse, PhotoBase, PhotoModels
 from app.repository import photo as repository_photo
 
 from app.repository.users import User
@@ -33,9 +35,10 @@ async def see_photo(photo_id: int, db: Session = Depends(get_db), current_user: 
 
 
 @router.post("/", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
-async def create_contact(body: PhotoModels, db: Session = Depends(get_db),
-                        current_user: User = Depends(auth_service.get_current_user) ):
-    return await repository_photo.add_photo(body, current_user, db)
+async def add_photo( body: PhotoModels, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user), file: UploadFile= File(...)  ):
+    result = cloudinary.uploader.upload(file.file)
+    url = result.get("url")
+    return await repository_photo.add_photo(body, current_user, db, url),        
 
 @router.put("/{photo_id}", response_model=PhotoModels)
 async def update_description(body: PhotoModels, photo_id: int, db: Session = Depends(get_db),

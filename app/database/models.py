@@ -1,4 +1,5 @@
 import enum
+import cloudinary
 
 from sqlalchemy import (
     Column,
@@ -14,9 +15,15 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy_utils import URLType, EmailType
 
 Base = declarative_base()
 
+cloudinary.config(
+    cloud_name= "hnduusros",
+    api_key= "927131722149478",
+    api_secret ="he5lFnOeoeRDBmV9z9QKCTxhLn0"
+)
 
 image_m2m_tag = Table(
     "image_m2m_tag",
@@ -38,6 +45,7 @@ class Image(Base):
     id = Column(Integer, primary_key=True)
     description = Column(String(255))
     image = Column(LargeBinary)
+    url = Column(URLType)
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
@@ -63,7 +71,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String(50))
-    email = Column(String(255), nullable=False, unique=True)
+    email = Column(EmailType)
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     avatar = Column(String(255), nullable=True)
