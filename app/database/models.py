@@ -1,5 +1,6 @@
 import enum
 import cloudinary
+import shutil
 
 from sqlalchemy import (
     Column,
@@ -21,11 +22,11 @@ from sqlalchemy.orm import DeclarativeBase
 class Base(DeclarativeBase): pass
 
 # Base = declarative_base()
-
-cloudinary.config(
-    cloud_name= "hnduusros",
-    api_key= "927131722149478",
-    api_secret ="he5lFnOeoeRDBmV9z9QKCTxhLn0"
+def config_cloudinary():
+  cloudinary.config( 
+  cloud_name = "dxcxwykgi", 
+  api_key = "965857845638511", 
+  api_secret = "6IpshQRJn1E7cmFekz1-2VMNj3g" 
 )
 
 image_m2m_tag = Table(
@@ -53,8 +54,9 @@ class Role(enum.Enum):
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
+    name =  Column(String(50))
     description = Column(String(255))
-    image = Column(LargeBinary)
+    # image = Column(LargeBinary)
     url = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)

@@ -2,6 +2,13 @@ from typing import List
 from datetime import date, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, extract, or_, select
+from fastapi import File
+
+from app.database.models import config_cloudinary
+import cloudinary
+import cloudinary.uploader
+import shutil
+
 
 from app.database.models import   User, Image
 
@@ -21,8 +28,21 @@ async def get_photo(photo_id: int, user: User, db: Session):
 
 
 
-async def add_photo(  body: PhotoModels, user: User, db: Session, url:str) -> Image:
-    photo = Image( description=body.description, image=body.name,  tags=body.tags, user_id=user.id, user=user.username, url= url)
+async def add_photo( photo:File(),
+                #    user: User,
+                    db: Session,
+                    name: str | None = None,
+                    description: str | None = None,
+                    tags: List[str] | None = None,
+                    ) -> Image:
+    config_cloudinary()
+    
+    uploaded_file_info = cloudinary.uploader.upload(photo.file)
+
+    photo_url = uploaded_file_info["secure_url"]
+    # public_id = uploaded_file_info["public_id"]
+    
+    photo = Image(name=name, description=description, tags=tags, url=photo_url)
     db.add(photo)
     db.commit()
     db.refresh(photo)
@@ -44,3 +64,13 @@ async def remove_photo( photo_id: int, user: User, db: Session) -> Image | None:
         db.delete(photo)
         db.commit()
     return photo
+
+async def create_photo( text:str, db:Session, url:str, 
+                       #user: User
+                         ):
+    
+    Photo_url = Image( description= text , url=url )
+    db.add(Photo_url)
+    db.commit()
+    db.refresh(Photo_url)
+    return Photo_url
