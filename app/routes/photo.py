@@ -3,7 +3,8 @@ import cloudinary
 import cloudinary.uploader
 import shutil
 
-from app.database.models import config_cloudinary, CropMode, BGColor
+from app.database.models import CropMode, BGColor
+from app.conf.config import config_cloudinary
 
 from fastapi_limiter.depends import RateLimiter
 from fastapi import APIRouter, HTTPException, Depends, status, File, UploadFile, Form
