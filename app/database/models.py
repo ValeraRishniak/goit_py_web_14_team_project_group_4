@@ -27,12 +27,12 @@ class Base(DeclarativeBase):
 
 # Base = declarative_base()
 
-def config_cloudinary():
-  cloudinary.config( 
-  cloud_name = "dxcxwykgi", 
-  api_key = "965857845638511", 
-  api_secret = "6IpshQRJn1E7cmFekz1-2VMNj3g" 
-)
+# def config_cloudinary():
+#   cloudinary.config( 
+#   cloud_name = "dxcxwykgi", 
+#   api_key = "965857845638511", 
+#   api_secret = "6IpshQRJn1E7cmFekz1-2VMNj3g" 
+# )
 
 image_m2m_tag = Table(
     "image_m2m_tag",
@@ -94,7 +94,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String(50))
-    email = Column(EmailType)
+    email = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     avatar = Column(String(255), nullable=True)
