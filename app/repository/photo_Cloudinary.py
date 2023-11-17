@@ -5,6 +5,8 @@ from sqlalchemy import and_, extract, or_, select
 import cloudinary 
 import cloudinary.uploader
 import uuid
+import qrcode
+import os
 
 from fastapi import File, HTTPException, status
 
@@ -13,7 +15,7 @@ import cloudinary.uploader
 import shutil
 from app.database.models import config_cloudinary
 
-from app.database.models import   User, Image
+from app.database.models import   User, Image, QR_code
 from app.schemas.photo_tags import  PhotoModels, PhotoBase
 from app.services.photo import validate_crop_mode, validate_gravity_mode          
 
@@ -56,6 +58,7 @@ async def add_photo( photo:File(),
 
     photo = Image(
         url=photo_url,
+        name= name,
         description=description,
         # user_id=user.id,
         tags=tags,
@@ -69,4 +72,55 @@ async def add_photo( photo:File(),
         raise e
 
     return photo
+
+async def get_URL_QR(photo_id: int, db: Session):
+
+    query = select(Image).filter(Image.id == photo_id)
+    result = await db.execute(query)
+    photo = result.scalar()
+
+    if photo is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    query = select(QR_code).filter(QR_code.photo_id == photo_id)
+    result = await db.execute(query)
+    qr = result.scalar_one_or_none()
+
+    if qr is None:
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+
+        qr.add_data(photo.url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        qr_code_file_path = "my_qr_code.png"
+        img.save(qr_code_file_path)
+
+        config_cloudinary()
+        upload_result = cloudinary.uploader.upload(
+            qr_code_file_path,
+            public_id=f"Qr_Code/Photo_{photo_id}",
+            overwrite=True,
+            invalidate=True,
+        )
+        qr = QR_code(url=upload_result["secure_url"], photo_id=photo_id)
+
+        try:
+            db.add(qr)
+            await db.commit()
+            db.refresh(qr)
+        except Exception as e:
+            await db.rollback()
+            raise e
+
+        os.remove(qr_code_file_path)
+        return {"source_url": photo.url, "qr_code_url": qr.url}
+
+    return {"source_url": photo.url, "qr_code_url": qr.url}
+
 
