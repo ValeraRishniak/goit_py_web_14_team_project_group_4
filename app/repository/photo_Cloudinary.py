@@ -13,7 +13,7 @@ from fastapi import File, HTTPException, status
 import cloudinary
 import cloudinary.uploader
 import shutil
-from app.database.models import config_cloudinary
+from app.conf.config import config_cloudinary
 
 from app.database.models import   User, Image, QR_code
 from app.schemas.photo_tags import  PhotoModels, PhotoBase
