@@ -26,29 +26,15 @@ async def get_photo(photo_id: int, user: User, db: Session):
     return photo
 
 
-
-
-async def add_photo( photo:File(),
-                #    user: User,
-                    db: Session,
-                    name: str | None = None,
-                    description: str | None = None,
-                    tags: List[str] | None = None,
-                    ) -> Image:
-    config_cloudinary()
+async def create_photo( text:str, db:Session, url:str, 
+                       #user: User
+                         ):
     
-    uploaded_file_info = cloudinary.uploader.upload(photo.file)
-
-    photo_url = uploaded_file_info["secure_url"]
-    # public_id = uploaded_file_info["public_id"]
-    
-    photo = Image(name=name, description=description, tags=tags, url=photo_url)
-    db.add(photo)
+    Photo_url = Image( description= text , url=url )
+    db.add(Photo_url)
     db.commit()
-    db.refresh(photo)
-    return photo
-
-
+    db.refresh(Photo_url)
+    return Photo_url
 
 async def update_description( photo_id: int, body: PhotoModels, user: User, db: Session) -> Image | None:
     photo = db.query(Image).filter_by(id=photo_id).first()
@@ -65,12 +51,4 @@ async def remove_photo( photo_id: int, user: User, db: Session) -> Image | None:
         db.commit()
     return photo
 
-async def create_photo( text:str, db:Session, url:str, 
-                       #user: User
-                         ):
-    
-    Photo_url = Image( description= text , url=url )
-    db.add(Photo_url)
-    db.commit()
-    db.refresh(Photo_url)
-    return Photo_url
+

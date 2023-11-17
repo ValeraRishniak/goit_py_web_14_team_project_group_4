@@ -4,13 +4,13 @@ from datetime import date, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, extract, or_, select
 
-from app.database.models import ImageComment
+from app.database.models import ImageComment, User
 
 from app.schemas.comment import  CommentBase
  
  
-async def create_comment(db: Session, body: CommentBase,  image_id: int ):
-    db_comment = ImageComment ( comment_description=body.comment_description, image_id=image_id )
+async def create_comment(db: Session, body: CommentBase,  image_id: int, user: User ):
+    db_comment = ImageComment ( comment_description=body.comment_description, image_id=image_id, user_id=user.id )
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)

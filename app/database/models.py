@@ -62,15 +62,14 @@ class Image(Base):
     id = Column(Integer, primary_key=True)
     name =  Column(String(50))
     description = Column(String(255))
-    # image = Column(LargeBinary)
+    image = Column(LargeBinary)
     url = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
-    comment = relationship(
-        "ImageComment", secondary=image_m2m_comment, backref="images"
-    )
+    comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
+    QR = relationship("QR_code", back_populates="image", cascade="all")
 
 
 class ImageTag(Base):
@@ -121,5 +120,14 @@ class BGColor(str, enum.Enum):
     gray = "gray"
     brown = "brown"
     transparent = "transparent"
-    
 
+
+class QR_code(Base):
+    __tablename__ = "Qr_codes"
+
+    id  =  Column(Integer, primary_key=True)
+    url = Column(String(255), nullable=False)
+
+    photo_id = Column(Integer, ForeignKey("images.id"))
+    photo = relationship("Image", back_populates="QR")
+        

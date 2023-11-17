@@ -5,6 +5,7 @@ import shutil
 
 from app.database.models import config_cloudinary, CropMode, BGColor
 
+from fastapi_limiter.depends import RateLimiter
 from fastapi import APIRouter, HTTPException, Depends, status, File, UploadFile, Form
 from sqlalchemy.orm import Session
 
@@ -117,3 +118,12 @@ async def add_photo(file: UploadFile=File(...),
     if new_photo:
         return response
     
+
+
+@router.post("/make_QR/", status_code=status.HTTP_200_OK, description="No more than 10 requests per minute", dependencies=[Depends(RateLimiter(times=10, seconds=60))],)
+async def make_URL_QR( photo_id: int,
+                     # current_user: User = Depends(auth_service.get_authenticated_user),
+                      db: Session = Depends(get_db)):
+    
+    data = await repository_photo_cloudinary.get_URL_QR(photo_id, db)
+    return data
