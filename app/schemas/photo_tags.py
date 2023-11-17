@@ -16,7 +16,7 @@ class ImageTagResponse(ImageTagModel):
 
 
 class PhotoBase(BaseModel):
-     name: str | None = None
+    name: str | None = None
 
 
 class PhotoModels(PhotoBase):
@@ -25,7 +25,6 @@ class PhotoModels(PhotoBase):
     tags: List[ImageTagResponse] | None = None
     created_date: Optional[datetime ]
     id  : int
-    
+
     class Config:
         from_attributes = True
-
