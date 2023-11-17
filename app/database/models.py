@@ -69,7 +69,7 @@ class Image(Base):
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
     comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
-    QR = relationship("QR_code", back_populates="image", cascade="all")
+    QR = relationship("QR_code", backref="images", cascade="all")
 
 
 class ImageTag(Base):
@@ -129,5 +129,5 @@ class QR_code(Base):
     url = Column(String(255), nullable=False)
 
     photo_id = Column(Integer, ForeignKey("images.id"))
-    photo = relationship("Image", back_populates="QR")
+
         
