@@ -69,7 +69,7 @@ async def create_foto(request: Request,
                       db: Session = Depends(get_db),
                       current_user: User = Depends(auth_service.get_current_user)):
 
-    return await repository_photo.create_foto(request, title, descr, tags, file, db, current_user)
+    return await repository_photo.create_photo(request, title, descr, tags, file, db, current_user)
 
 
 
