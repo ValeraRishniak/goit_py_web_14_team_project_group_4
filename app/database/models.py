@@ -57,19 +57,41 @@ class Role(enum.Enum):
     user: str = "user"
 
 
+# class Image(Base):
+#     __tablename__ = "images"
+#     id = Column(Integer, primary_key=True)
+#     name =  Column(String(50))
+#     description = Column(String(255))
+#     image = Column(LargeBinary)
+#     url = Column(String(255))
+#     created_at = Column(DateTime, default=func.now())
+#     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
+#     user = relationship("User", backref="images")
+#     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
+#     comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
+#     QR = relationship("QR_code", backref="images", cascade="all")
+
+
+'''
+variant VRishniak
+'''
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
-    name =  Column(String(50))
-    description = Column(String(255))
-    image = Column(LargeBinary)
-    url = Column(String(255))
+    image_url = Column(String(300))
+    transform_url = Column(String(500), nullable=True)
+    title = Column(String(50), nullable=True)
+    description = Column(String(255), nullable=True)
     created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
+    tags = relationship('ImageTag', secondary=image_m2m_tag, backref='images')
+    done = Column(Boolean, default=False)
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="images")
-    tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
     comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
-    QR = relationship("QR_code", backref="images", cascade="all")
+
+
+
 
 
 class ImageTag(Base):

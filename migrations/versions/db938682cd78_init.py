@@ -1,8 +1,8 @@
 """Init
 
-Revision ID: c329bd3c4cac
+Revision ID: db938682cd78
 Revises: 
-Create Date: 2023-11-17 15:28:53.252170
+Create Date: 2023-11-18 13:10:41.761838
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c329bd3c4cac'
+revision: str = 'db938682cd78'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -40,12 +40,22 @@ def upgrade() -> None:
     )
     op.create_table('images',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('image_url', sa.String(length=300), nullable=True),
+    sa.Column('transform_url', sa.String(length=500), nullable=True),
+    sa.Column('title', sa.String(length=50), nullable=True),
     sa.Column('description', sa.String(length=255), nullable=True),
-    sa.Column('url', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('done', sa.Boolean(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('Qr_codes',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('url', sa.String(length=255), nullable=False),
+    sa.Column('photo_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['photo_id'], ['images.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('comments',
@@ -83,6 +93,7 @@ def downgrade() -> None:
     op.drop_table('image_m2m_comment')
     op.drop_table('image_m2m_tag')
     op.drop_table('comments')
+    op.drop_table('Qr_codes')
     op.drop_table('images')
     op.drop_table('users')
     op.drop_table('tags')
