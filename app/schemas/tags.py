@@ -1,24 +1,17 @@
-'''
+"""
 variant VRishniak
-'''
+"""
 
 
 from datetime import datetime
 from pydantic import BaseModel, Field
 
 
-class ImageTag(BaseModel):
+class ImageTagModel(BaseModel):
     tag_name: str = Field(max_length=25)
 
 
-class ImageTagModel(ImageTag):
-    pass
-
-    class Config:
-        from_attributes = True
-
-
-class ImageTagResponse(ImageTag):
+class ImageTagResponse(ImageTagModel):
     id: int
     user_id: int
     created_at: datetime
