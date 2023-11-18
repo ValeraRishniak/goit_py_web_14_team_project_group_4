@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, extract, or_, select
 from fastapi import File
 
-from app.database.models import config_cloudinary
+from app.conf.config import config_cloudinary
 import cloudinary
 import cloudinary.uploader
 import shutil
