@@ -7,12 +7,12 @@ def config_cloudinary():
         cloud_name=settings.cloudinary_name,
         api_key=settings.cloudinary_api_key,
         api_secret=settings.cloudinary_api_secret,
-        secure=True
+        secure=True,
     )
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
