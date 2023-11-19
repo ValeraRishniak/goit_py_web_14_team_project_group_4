@@ -71,7 +71,7 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     return {"message": "Check your email for confirmation."}
 
 
-@router.get('/confirm_your_email/{token}')
+@router.get('/confirmed_email/{token}')
 async def confirmed_email(token: str, db: Session = Depends(get_db)):
 
     email = await auth_service.get_email_from_token(token)
