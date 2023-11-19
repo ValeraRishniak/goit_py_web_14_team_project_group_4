@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
-from app.schemas.photo_tags import ImageTagModel, ImageTagResponse
+from app.schemas.tags import ImageTagModel, ImageTagResponse
 from app.repository import tags as repository_tags
 
 router = APIRouter(prefix="/tags", tags=["tags"])
