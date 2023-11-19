@@ -12,3 +12,6 @@ class RoleChecker():
         if current_user.role not in self.allwed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                                 detail="Operation forbiden, you do not have access rights")
+
+Admin_Moder = RoleChecker([Role.admin, Role.moderator])
+Admin = RoleChecker([Role.admin])

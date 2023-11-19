@@ -1,6 +1,6 @@
 import cloudinary
 from pydantic_settings import BaseSettings
-
+import redis.asyncio
 
 def config_cloudinary():
     cloudinary.config(
@@ -9,7 +9,15 @@ def config_cloudinary():
         api_secret=settings.cloudinary_api_secret,
         secure=True,
     )
-
+    
+async def init_async_redis():
+    return redis.asyncio.Redis(
+        host=settings.redis_host,
+        password=settings.redis_password,
+        username=settings.redis_username,
+        ssl=True,
+        encoding="utf-8",
+    )
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg2://postgres:567234@localhost:5432/test-db-team-4"

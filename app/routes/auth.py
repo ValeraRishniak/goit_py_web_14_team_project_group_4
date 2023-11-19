@@ -95,22 +95,13 @@ async def refresh_token(
     access_token = await auth_service.create_access_token(data={"sub": email})
     refresh_token = await auth_service.create_refresh_token(data={"sub": email})
     await repository_users.update_token(user, refresh_token, db)
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer",
-    }
+    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
-@router.post("/check_email_confirmation")
-async def request_email(
-    body: RequestEmail,
-    background_tasks: BackgroundTasks,
-    request: Request,
-    db: Session = Depends(get_db),
-):
+@router.post('/request_email')
+async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, request: Request,
+                        db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(body.email, db)
-
     if user.confirmed:
         return {"message": "Your email is already confirmed"}
     if user:
@@ -118,6 +109,7 @@ async def request_email(
             send_email, user.email, user.username, request.base_url
         )
     return {"message": "Check your email for confirmation."}
+
 
 
 @router.get("/confirmed_email/{token}")

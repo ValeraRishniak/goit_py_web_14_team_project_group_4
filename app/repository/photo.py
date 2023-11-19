@@ -10,7 +10,7 @@ from fastapi import Request, UploadFile
 
 
 from app.conf.config import config_cloudinary
-from app.database.models import User, Image
+from app.database.models import User, Image, Role
 from app.repository.tags import get_tags
 from app.schemas.photo import ImageDescriptionUpdate
 
@@ -23,7 +23,7 @@ from app.schemas.photo import ImageDescriptionUpdate
 # Стало - працює
 async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
-        db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
+        db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
 
 
@@ -112,7 +112,7 @@ async def update_description(
 ) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:
-        if photo.user_id == user.id:
+        if user.role == Role.admin or photo.user_id == user.id:
             photo.title = body.title
             photo.description = body.description
             photo.tags = body.tags
@@ -125,8 +125,9 @@ async def update_description(
 # поки не буде працювати
 async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
+    
     if photo:
-        if photo.user_id == user.id:
+        if user.role == Role.admin or photo.user_id == user.id:
             config_cloudinary()
             cloudinary.uploader.destroy(photo.public_id)
             db.delete(photo)
