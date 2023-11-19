@@ -15,19 +15,10 @@ from app.repository.tags import get_tags
 from app.schemas.photo import ImageDescriptionUpdate
 
 
-# Було - не працювало
-# async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-#     return db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
-
-
-# Стало - працює
 async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
-
-
-# Додав нову функцію
 
 
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
@@ -36,13 +27,6 @@ async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[
     )
 
 
-# Було - не працювало
-# async def get_photo(photo_id: int, db: Session,  user: User):
-#     photo = db.query(Image).filter_by(and_(Image.id == photo_id, Image.user_id == user.id)).first()
-#     return photo
-
-
-# стало - працює
 async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
     photo = (
         db.query(Image)
@@ -50,21 +34,6 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
         .first()
     )
     return photo
-
-
-# async def create_photo( text:str, db:Session, url:str,
-#                        #user: User
-#                          ):
-
-#     Photo_url = Image( description= text , url=url )
-#     db.add(Photo_url)
-#     db.commit()
-#     db.refresh(Photo_url)
-#     return Photo_url
-
-"""
-variant VRishniak
-"""
 
 
 async def create_photo(
@@ -93,7 +62,7 @@ async def create_photo(
         description=description,
         created_at=datetime.now(),
         updated_at=datetime.now(),
-        # tags=tags,
+        tags=tags,
         done=True,
         user_id=current_user.id,
         public_id=public_id,
@@ -121,8 +90,6 @@ async def update_description(
 
 
 # додати роль
-# додати в ствроення фотографії (в модель і функцію параметр public_id, оскільки по ньому здійснюється видалення фото з cloudinary)
-# поки не буде працювати
 async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:

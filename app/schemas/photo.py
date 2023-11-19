@@ -2,7 +2,7 @@
 variant VRishniak
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
@@ -13,6 +13,12 @@ class ImageModel(BaseModel):
     title: str = Field(max_length=45)
     description: str = Field(max_length=255)
     tags: List[str] = []
+       
+    @validator("tags")
+    def validate_tags(cls, v):
+        if len(v or []) > 5:
+            raise ValueError("Too many tags. Maximum 5 tags allowed.")
+        return v
 
 
 class ImageModelsResponse(ImageModel):
@@ -21,6 +27,7 @@ class ImageModelsResponse(ImageModel):
     avg_rating: Optional[float] = 0.0
     created_at: datetime
     updated_at: datetime
+    tags: List[str]
 
     class Config:
         from_attributes = True
@@ -29,7 +36,7 @@ class ImageModelsResponse(ImageModel):
 class ImageDescriptionUpdate(BaseModel):
     title: str = Field(max_length=45)
     description: str = Field(max_length=255)
-    tags: List[str] = []
+    tags: List[str]
 
 
 # from datetime import datetime
