@@ -10,12 +10,12 @@ from app.repository import tags as repository_tags
 router = APIRouter(prefix="/tags", tags=["tags"])
 
 
-@router.get("/", response_model=List[ImageTagResponse])
-async def read_tags(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
+@router.get("/all tags/", response_model=List[ImageTagResponse])
+async def read_tags(skip: int = 0, limit: int = 25, db: Session = Depends(get_db)):
     return await repository_tags.get_tags(skip, limit, db)
 
 
-@router.get("/{tag_id}", response_model=ImageTagResponse)
+@router.get("/get tag by id/{tag_id}", response_model=ImageTagResponse)
 async def read_tag(tag_id: int, db: Session = Depends(get_db)):
     tag = await repository_tags.get_tag_by_id(tag_id, db)
     if tag is None:
