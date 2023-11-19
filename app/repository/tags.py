@@ -3,7 +3,8 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from app.database.models import ImageTag
-from app.schemas.photo_tags import ImageTagModel
+from app.schemas.tags import ImageTagModel
+
 
 
 async def get_tags(skip: int, limit: int, db: Session) -> List[ImageTag]:

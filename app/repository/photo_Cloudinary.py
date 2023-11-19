@@ -16,7 +16,6 @@ import shutil
 from app.conf.config import config_cloudinary
 
 from app.database.models import   User, Image, QR_code
-from app.schemas.photo_tags import  PhotoModels, PhotoBase
 from app.services.photo import validate_crop_mode, validate_gravity_mode          
 
 # result = cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg", public_id = "olympic_flag")

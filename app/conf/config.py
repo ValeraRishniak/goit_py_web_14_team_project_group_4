@@ -12,7 +12,7 @@ def config_cloudinary():
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    database_url: str = "postgresql+psycopg2://postgres:567234@localhost:5432/test-db-team-4"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"

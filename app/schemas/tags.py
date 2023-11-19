@@ -13,8 +13,8 @@ class ImageTagModel(BaseModel):
 
 class ImageTagResponse(ImageTagModel):
     id: int
-    user_id: int
-    created_at: datetime
+    tag_name: str
+
 
     class Config:
         from_attributes = True
