@@ -1,6 +1,6 @@
 import cloudinary
 import cloudinary.uploader
-import uuid
+from uuid import uuid4
 
 from typing import List
 from datetime import datetime
@@ -21,14 +21,19 @@ from app.schemas.photo import ImageDescriptionUpdate
 
 
 # Стало - працює
-async def get_photos(skip: int, limit: int, db: Session) -> List[Image]:
-    return db.query(Image).offset(skip).limit(limit).offset(skip).limit(limit).all()
+async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
+    return (
+        db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
+    )
+
 
 # Додав нову функцію
 
 
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-    return db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
+    return (
+        db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
+    )
 
 
 # Було - не працювало
@@ -39,8 +44,11 @@ async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[
 
 # стало - працює
 async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
-    photo = db.query(Image).filter(
-        and_(Image.user_id == user.id, Image.id == photo_id)).first()
+    photo = (
+        db.query(Image)
+        .filter(and_(Image.user_id == user.id, Image.id == photo_id))
+        .first()
+    )
     return photo
 
 
@@ -54,9 +62,9 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
 #     db.refresh(Photo_url)
 #     return Photo_url
 
-'''
+"""
 variant VRishniak
-'''
+"""
 
 
 async def create_photo(
@@ -68,33 +76,19 @@ async def create_photo(
     db: Session,
     current_user: User,
 ) -> Image:
-
-    photo_number = 1
-
-    db_photo = (
-        db.query(Image)
-        .filter(and_(Image.user_id == current_user.id, Image.id == photo_number))
-        .first()
-    )
-
-    if db_photo:
-        photo_number += 1
-
-    public_id = f"PhotoShake/{photo_number}"  # uuid.uuid4().hex
+    public_id = f"PhotoShake/{uuid4().hex}"
 
     config_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=public_id)
-    url = cloudinary.CloudinaryImage(f"PhotoShake/{photo_number}").build_url(
-        width=250, height=250, crop="fill"
+    url = cloudinary.CloudinaryImage(public_id).build_url(
+        width=500, height=500, crop="fill"
     )
-    url2 = url
 
     if tags:
         tags = get_tags(tags[0].split(","), current_user, db)
 
-    foto = Image(
+    photo = Image(
         image_url=url,
-        transform_url=url2,
         title=title,
         description=description,
         created_at=datetime.now(),
@@ -102,17 +96,20 @@ async def create_photo(
         # tags=tags,
         done=True,
         user_id=current_user.id,
+        public_id=public_id,
     )
-    db.add(foto)
+    db.add(photo)
     db.commit()
-    db.refresh(foto)
+    db.refresh(photo)
 
-    return foto
+    return photo
 
 
 # додати роль
 # не працюють теги, якщо у свагері робити зміни, не змінюючи тегів, title i description працюють
-async def update_description(photo_id: int, body: ImageDescriptionUpdate, user: User, db: Session) -> Image | None:
+async def update_description(
+    photo_id: int, body: ImageDescriptionUpdate, user: User, db: Session
+) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:
         if photo.user_id == user.id:
@@ -125,7 +122,7 @@ async def update_description(photo_id: int, body: ImageDescriptionUpdate, user: 
 
 # додати роль
 # додати в ствроення фотографії (в модель і функцію параметр public_id, оскільки по ньому здійснюється видалення фото з cloudinary)
-#поки не буде працювати
+# поки не буде працювати
 async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:

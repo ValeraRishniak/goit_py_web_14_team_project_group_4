@@ -1,12 +1,9 @@
 import enum
-import cloudinary
-import shutil
 
 from sqlalchemy import (
     Column,
     ForeignKey,
     Integer,
-    LargeBinary,
     String,
     Boolean,
     func,
@@ -16,23 +13,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
 
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy_utils import URLType, EmailType
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.declarative import declarative_base
 
 
-class Base(DeclarativeBase):
-    pass
-
-
-# Base = declarative_base()
-
-# def config_cloudinary():
-#   cloudinary.config(
-#   cloud_name = "dxcxwykgi",
-#   api_key = "965857845638511",
-#   api_secret = "6IpshQRJn1E7cmFekz1-2VMNj3g"
-# )
+Base = declarative_base()
 
 image_m2m_tag = Table(
     "image_m2m_tag",
@@ -84,6 +68,7 @@ class Image(Base):
     transform_url = Column(String(500), nullable=True)
     title = Column(String(50), nullable=True)
     description = Column(String(255), nullable=True)
+    public_id = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")

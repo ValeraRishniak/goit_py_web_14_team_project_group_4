@@ -7,12 +7,21 @@ from app.database.models import CropMode, BGColor
 from app.conf.config import config_cloudinary
 
 from fastapi_limiter.depends import RateLimiter
-from fastapi import APIRouter, HTTPException, Depends, Request, status, File, UploadFile, Form
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Depends,
+    Request,
+    status,
+    File,
+    UploadFile,
+    Form,
+)
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
 
-from app.schemas.photo import ImageDescriptionUpdate, ImageModelsResponce
+from app.schemas.photo import ImageDescriptionUpdate, ImageModelsResponse
 from app.repository import photo as repository_photo
 from app.repository import photo_Cloudinary as repository_photo_cloudinary
 
@@ -20,46 +29,52 @@ from app.repository.users import User
 from app.services.auth import auth_service
 
 
-router = APIRouter(prefix='/photos', tags=["photos"])
+router = APIRouter(prefix="/photos", tags=["photos"])
+
 
 # Змінив, тепер працює
-@router.get("/", response_model=List[ImageModelsResponce])
-async def see_photos(skip: int = 0,
-                    limit: int = 25,
-                    current_user: User = Depends(auth_service.get_current_user),
-                    db: Session = Depends(get_db),
-                    ):
-    photos = await repository_photo.get_photos(skip, limit, db)
+@router.get("/", response_model=List[ImageModelsResponse])
+async def see_photos(
+    skip: int = 0,
+    limit: int = 25,
+    current_user: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    photos = await repository_photo.get_photos(skip, limit, current_user, db)
     if photos is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     return photos
 
 
 # Додав нову функцію
-@router.get("/my_photos", response_model=List[ImageModelsResponce])
-async def see_only_my_photos(skip: int = 0,
-                            limit: int = 25,
-                            current_user: User = Depends(auth_service.get_current_user), 
-                            db: Session = Depends (get_db)
-                            ):
-    photos = await repository_photo.get_my_photos(skip, limit,current_user, db)
+@router.get("/my_photos", response_model=List[ImageModelsResponse])
+async def see_only_my_photos(
+    skip: int = 0,
+    limit: int = 25,
+    current_user: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    photos = await repository_photo.get_my_photos(skip, limit, current_user, db)
     if photos is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Your foto not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Your foto not found"
+        )
     return photos
 
 
 # Працює
-@router.get("/by_id/{photo_id}", response_model=ImageModelsResponce)
-async def see_one_photo(photo_id: int, 
-                        db: Session = Depends(get_db), 
-                        current_user: User = Depends(auth_service.get_current_user)
-                    ):
+@router.get("/by_id/{photo_id}", response_model=ImageModelsResponse)
+async def see_one_photo(
+    photo_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
     photo = await repository_photo.get_photo_by_id(photo_id, current_user, db)
     if photo is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="By id not found your photo")
+            status_code=status.HTTP_404_NOT_FOUND, detail="By id not found your photo"
+        )
     return photo
-
 
 
 # @router.post("/ {photo_new}", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
@@ -74,43 +89,55 @@ async def see_one_photo(photo_id: int,
 
 #     return new_photo
 
-'''
+"""
 variant VRishniak
-'''
+"""
 
 
-@router.post("/new/", response_model=ImageModelsResponce, status_code=status.HTTP_201_CREATED)
-async def create_foto(request: Request,
-                      title: str = Form(), description: str = Form(),
-                      tags: List = Form(None), file: UploadFile = File(None),
-                      db: Session = Depends(get_db),
-                      current_user: User = Depends(auth_service.get_current_user)):
+@router.post(
+    "/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED
+)
+async def create_foto(
+    request: Request,
+    title: str = Form(),
+    description: str = Form(),
+    tags: List = Form(None),
+    file: UploadFile = File(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
+    return await repository_photo.create_photo(
+        request, title, description, tags, file, db, current_user
+    )
 
-    return await repository_photo.create_photo(request, title, description, tags, file, db, current_user)
 
-
-@router.put("/{photo_id}", response_model=ImageModelsResponce)
-async def update_description(body: ImageDescriptionUpdate, 
-                             photo_id: int, 
-                             db: Session = Depends(get_db),
-                             current_user: User = Depends(auth_service.get_current_user)
-                             ):
+@router.put("/{photo_id}", response_model=ImageModelsResponse)
+async def update_description(
+    body: ImageDescriptionUpdate,
+    photo_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
     photo = await repository_photo.update_description(photo_id, body, current_user, db)
     if photo is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="Your photo by id is not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Your photo by id is not found",
+        )
     return photo
 
 
-@router.delete("/{photo_id}", response_model=ImageModelsResponce)
-async def remove_photo(photo_id: int, 
-                       db: Session = Depends(get_db), 
-                       current_user: User = Depends(auth_service.get_current_user)
-                       ):
+@router.delete("/{photo_id}", response_model=ImageModelsResponse)
+async def remove_photo(
+    photo_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
     photo = await repository_photo.remove_photo(photo_id, current_user, db)
     if photo is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Your photo not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Your photo not found"
+        )
     return photo
 
 
@@ -155,10 +182,16 @@ async def remove_photo(photo_id: int,
 #         return response
 
 
-@router.post("/make_QR/", status_code=status.HTTP_200_OK, description="No more than 10 requests per minute", dependencies=[Depends(RateLimiter(times=10, seconds=60))],)
-async def make_URL_QR(photo_id: int,
-                      # current_user: User = Depends(auth_service.get_authenticated_user),
-                      db: Session = Depends(get_db)):
-
-    data = await repository_photo_cloudinary.get_URL_QR(photo_id, db)
-    return data
+# @router.post(
+#     "/make_QR/",
+#     status_code=status.HTTP_200_OK,
+#     description="No more than 10 requests per minute",
+#     dependencies=[Depends(RateLimiter(times=10, seconds=60))],
+# )
+# async def make_URL_QR(
+#     photo_id: int,
+#     # current_user: User = Depends(auth_service.get_authenticated_user),
+#     db: Session = Depends(get_db),
+# ):
+#     data = await repository_photo_cloudinary.get_URL_QR(photo_id, db)
+#     return data
