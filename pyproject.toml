@@ -20,8 +20,8 @@ fastapi-limiter = "^0.1.5"
 psycopg2 = "^2.9.9"
 pydantic = "^2.5.0"
 cloudinary-upload = "^0.0.4"
-qrcode = "^7.4.2"
 cloudinary = "^1.36.0"
+qrcode = {extras = ["pil"], version = "^7.4.2"}
 
 
 [tool.poetry.group.dev.dependencies]
