@@ -23,7 +23,7 @@ from app.schemas.photo import ImageDescriptionUpdate
 # Стало - працює
 async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
-        db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
+        db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
 
 
