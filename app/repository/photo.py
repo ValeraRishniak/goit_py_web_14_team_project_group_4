@@ -6,7 +6,7 @@ from typing import List
 from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
-from fastapi import Request, UploadFile
+from fastapi import UploadFile
 
 
 from app.conf.config import config_cloudinary
@@ -16,15 +16,9 @@ from app.schemas.photo import ImageModel
 from app.schemas.tags import ImageTagModel
 
 
-async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-    return (
-        db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
-    )
-
-
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
-        db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
+        db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
 
 
@@ -52,8 +46,6 @@ async def create_photo(
         width=500, height=500, crop="fill"
     )
 
-    # if tags:
-    #     tags = get_tags(tags[0].split(","), current_user, db)
     image = Image(
         image_url=url,
         title=title,
@@ -82,7 +74,6 @@ async def create_photo(
 
 
 # додати роль
-# не працюють теги, якщо у свагері робити зміни, не змінюючи тегів, title i description працюють
 async def update_description(
     photo_id: int, body: ImageModel, user: User, db: Session
 ) -> Image | None:

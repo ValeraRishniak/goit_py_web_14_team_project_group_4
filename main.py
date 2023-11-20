@@ -1,7 +1,3 @@
-"""
-Main.py налаштований. Можливі зміни лише у підключені routes
-"""
-
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session

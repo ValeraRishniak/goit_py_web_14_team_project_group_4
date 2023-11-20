@@ -1,10 +1,8 @@
-"""
-variant VRishniak
-"""
 from pydantic import BaseModel, validator
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel, Field
+from app.schemas.comment import CommentResponse
 
 from app.schemas.tags import ImageTagModel, ImageTagResponse
 
@@ -26,7 +24,6 @@ class ImageModelsResponse(ImageModel):
     image_url: str = Field(max_length=300, default=None)
     transform_url: str | None = Field(max_length=300, default=None)
     id: int
-    avg_rating: Optional[float] = 0.0
     created_at: datetime
     updated_at: datetime
 
@@ -34,23 +31,14 @@ class ImageModelsResponse(ImageModel):
         from_attributes = True
 
 
-# from datetime import datetime
-# from typing import List, Optional
-# from pydantic import BaseModel
+class ImageWithCommentModelsResponse(ImageModel):
+    tags: List[ImageTagResponse]
+    comment: List[CommentResponse]
+    image_url: str = Field(max_length=300, default=None)
+    transform_url: str | None = Field(max_length=300, default=None)
+    id: int
+    created_at: datetime
+    updated_at: datetime
 
-# from app.schemas.tags import ImageTagResponse
-
-
-# class ImageBase(BaseModel):
-#     name: str | None = None
-
-
-# class ImageModelsResponce(ImageBase):
-#     description: str | None = None
-#     photo: ImageBase | None = None
-#     tags: List[ImageTagResponse] | None = None
-#     created_date: Optional[datetime]
-#     id: int
-
-#     class Config:
-#         from_attributes = True
+    class Config:
+        from_attributes = True

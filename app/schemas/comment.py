@@ -7,10 +7,8 @@ class CommentBase(BaseModel):
 
 
 class CommentResponse(CommentBase):
-    id: int
-    created_at: datetime
     user_id: int
-    image_id: int
+    created_at: datetime
     update_status: bool = False
 
     class Config:
