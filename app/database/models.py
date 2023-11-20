@@ -41,49 +41,32 @@ class Role(enum.Enum):
     user: str = "user"
 
 
-# class Image(Base):
-#     __tablename__ = "images"
-#     id = Column(Integer, primary_key=True)
-#     name =  Column(String(50))
-#     description = Column(String(255))
-#     image = Column(LargeBinary)
-#     url = Column(String(255))
-#     created_at = Column(DateTime, default=func.now())
-#     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
-#     user = relationship("User", backref="images")
-#     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
-#     comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
-#     QR = relationship("QR_code", backref="images", cascade="all")
-
-
-"""
-variant VRishniak
-"""
-
-
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
-    image_url = Column(String(300))
-    transform_url = Column(String(500), nullable=True)
     title = Column(String(50), nullable=True)
     description = Column(String(255), nullable=True)
-    public_id = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
-    tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
     done = Column(Boolean, default=False)
+    image_url = Column(String(300))
+    transform_url = Column(String(500), nullable=True)
+    public_id = Column(String(255))
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
+    
     user = relationship("User", backref="images")
-    comment = relationship(
-        "ImageComment", secondary=image_m2m_comment, backref="images"
-    )
+    tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
+    comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
+
 
 
 class ImageTag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     tag_name = Column(String(25), unique=True)
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
+    
+    user = relationship('User', backref="tags")
 
 
 class ImageComment(Base):
@@ -91,10 +74,14 @@ class ImageComment(Base):
     id = Column(Integer, primary_key=True)
     comment_description = Column(String(255))
     created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-    user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
-    user = relationship("User", backref="comments")
-    image_id = Column(Integer, ForeignKey("images.id"))
+    updated_at = Column(DateTime, default=func.now())
+    user_id = Column('user_id', ForeignKey("users.id", ondelete="CASCADE"), default=None)
+    image_id = Column('image_id', ForeignKey('images.id', ondelete='CASCADE'), default=None)
+    update_status = Column(Boolean, default=False)
+
+    user = relationship('User', backref="comments")
+    photo = relationship('Image', backref="comments")
+
 
 
 class User(Base):

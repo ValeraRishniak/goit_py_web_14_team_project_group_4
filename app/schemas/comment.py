@@ -1,17 +1,25 @@
-from typing import Optional
 from pydantic import BaseModel
-import datetime
-from fastapi import Body
+from datetime import datetime
 
 
 class CommentBase(BaseModel):
     comment_description: str
 
 
-class CommentList(CommentBase):
+class CommentResponse(CommentBase):
     id: int
-    post_id: int
-    created_date: Optional[datetime.datetime] = Body(None)
+    created_at: datetime
+    user_id: int
+    image_id: int
+    update_status: bool = False
+
+    class Config:
+        from_attributes = True
+
+
+class CommentUpdateResponse(CommentBase):
+    updated_at: datetime
+    update_status: bool = True
 
     class Config:
         from_attributes = True

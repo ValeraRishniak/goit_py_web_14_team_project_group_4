@@ -77,23 +77,6 @@ async def see_one_photo(
     return photo
 
 
-# @router.post("/ {photo_new}", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
-# async def create_photo( name: str,  file: UploadFile=File(...), db: Session=Depends(get_db),
-#                        # current_user: User = Depends(auth_service.get_current_user)
-#                        ):
-#     config_cloudinary()
-#     result = cloudinary.uploader.upload(file.file)
-#     url = result.get("url")
-
-#     new_photo = await repository_photo.create_photo(name, db,  url )
-
-#     return new_photo
-
-"""
-variant VRishniak
-"""
-
-
 @router.post(
     "/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED
 )

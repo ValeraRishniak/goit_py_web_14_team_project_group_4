@@ -1,60 +1,51 @@
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, extract, or_, select
+from sqlalchemy import and_, extract, func, or_, select
 
 from app.database.models import ImageComment, User
 
 from app.schemas.comment import  CommentBase
  
- 
-async def create_comment(db: Session, body: CommentBase,  image_id: int, user: User ):
-    db_comment = ImageComment ( comment_description=body.comment_description, image_id=image_id, user_id=user.id )
+ #done - its work
+async def create_comment(image_id: int, body: CommentBase, db: Session, user: User ) -> ImageComment:
+    db_comment = ImageComment(comment_description=body.comment_description, image_id=image_id, user_id=user.id )
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)
     return db_comment
 
-async def get_comment(db: Session, comment_id:int ):
-    db_comment = db.get(ImageComment,comment_id)
-    if db_comment:
-      return db_comment
 
-async def update_comment(db: Session, comment_id:int, comment_new: CommentBase ):
-    db_comment = db.get(ImageComment,comment_id)
-    if db_comment:
-        try:
-            db_comment.comment_description = comment_new
-            await db.commit()
-            await db.refresh(db_comment)
-            return db_comment
-        except Exception as e:
-            await db.rollback()
-            raise e
-    return None
-
-async def delete_comment(comment_id: int, db: Session):
-    db_comment = await db.get(ImageComment, comment_id)
-    if db_comment:
-        try:
-            await db.delete(db_comment)
-            await db.commit()
-            return db_comment
-        except Exception as e:
-            await db.rollback()
-            raise e
-        
-
-async def get_photo_comments(offset: int, limit: int, image_id: int, db: Session):
-    photo_comments = (select(ImageComment).filter(ImageComment.image_id == image_id).offset(offset).limit(limit))
-    comments = await db.execute(photo_comments)
-    result = comments.scalars().all()
-    return result
+async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: User) -> ImageComment | None:
+    comment = db.query(ImageComment).filter(
+        ImageComment.id == comment_id).first()
+    if comment:
+        #додати перевірку ролей
+        if comment.user_id == user.id:
+            comment.comment_description = body.comment_description
+            comment.updated_at = func.now()
+            comment.update_status = True
+            db.commit()
+    return comment
 
 
-async def get_user_comments(offset: int, limit: int, user_id: int, db: Session):
-    user_comments = select(ImageComment).filter(ImageComment.user_id == user_id).offset(offset).limit(limit)
-    comments = await db.execute(user_comments)
-    result = comments.scalars().all()
-    return result
+async def delete_comment(comment_id: int, db: Session, user: User) -> None:
+    comment = db.query(ImageComment).filter(
+        ImageComment.id == comment_id).first()
+    if comment:  # додати перевірку ролей
+        db.delete(comment)
+        db.commit()
+    return comment
+
+
+async def show_single_comment(comment_id: int, db: Session, user: User) -> ImageComment | None:
+    return db.query(ImageComment).filter(and_(ImageComment.id == comment_id, ImageComment.user_id == user.id)).first()
+
+
+async def show_my_comments(user_id: int, db: Session) -> List[ImageComment] | None:
+    return db.query(ImageComment).filter(ImageComment.user_id == user_id).all()
+
+
+async def show_user_foto_comments(user_id: int, image_id: int, db: Session) -> List[ImageComment] | None:
+    return db.query(ImageComment).filter(and_(ImageComment.image_id == image_id, ImageComment.user_id == user_id)).all()
