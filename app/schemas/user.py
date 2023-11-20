@@ -1,5 +1,8 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
+
+from app.database.models import Role
 
 
 class UserModel(BaseModel):
@@ -26,6 +29,18 @@ class UserResponse(BaseModel):
     detail: str = "User successfully created"
 
 
+class UserProfileModel(BaseModel):
+    username: str 
+    email: EmailStr
+    avatar: Optional[str]
+    foto_count: Optional[int]
+    comment_count: Optional[int]
+    rates_count: Optional[int]
+    is_active: Optional[bool]
+    created_at: datetime
+
+
+
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
@@ -35,3 +50,7 @@ class TokenModel(BaseModel):
 class RequestEmail(BaseModel):
     email: EmailStr
 
+
+class RequestRole(BaseModel):
+    email: EmailStr
+    role: Role

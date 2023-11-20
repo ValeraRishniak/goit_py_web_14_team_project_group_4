@@ -95,6 +95,7 @@ class User(Base):
     refresh_token = Column(String(255), nullable=True)
     role = Column("role", Enum(Role), default=Role.user)
     confirmed = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
 
 
 class CropMode(str, enum.Enum):
@@ -125,3 +126,11 @@ class QR_code(Base):
     url = Column(String(255), nullable=False)
 
     image_id = Column(Integer, ForeignKey("images.id"))
+
+
+class BanToken(Base):
+    __tablename__ = 'blacklist_tokens'
+    
+    id = Column(Integer, primary_key=True)
+    token = Column(String(500), unique=True, nullable=False)
+    banned_on = Column(DateTime, default=func.now())
