@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from app.database.db import get_db
 from app.database.models  import User
 from app.database import SessionLocal
-from app.schemas.photo_tags import PhotoModels
+from app.schemas.photo import ImageModel
 
 SECRET_KEY = "Photo_SHAKE_123"
 
@@ -96,7 +96,7 @@ async def login_for_access_token(form_data: OAuth2PasswordBearer = Depends()):
 
 @app.post("/private-route", response_model=str)
 async def private_route(
-    photo: PhotoModels,
+    photo: ImageModel,
     current_user: User = Depends(get_current_active_user),
     db: SessionLocal = Depends(SessionLocal),
 ):
@@ -105,7 +105,7 @@ async def private_route(
 
 @app.post("/moderator-route", response_model=str)
 async def moderator_route(
-    photo: PhotoModels,
+    photo: ImageModel,
     current_user: User = Depends(get_current_moderator_user),
     db: SessionLocal = Depends(SessionLocal),
 ):
@@ -114,7 +114,7 @@ async def moderator_route(
 
 @app.post("/admin-route", response_model=str)
 async def admin_route(
-    photo: PhotoModels,
+    photo: ImageModel,
     current_user: User = Depends(get_current_admin_user),
     db: SessionLocal = Depends(SessionLocal),
 ):

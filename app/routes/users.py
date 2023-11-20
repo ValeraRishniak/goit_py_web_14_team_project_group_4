@@ -54,15 +54,26 @@ async def assign_role( email: str, role: Role, db: Session = Depends(get_db), re
 
 
 @router.get("/{username}", response_model=UserDb)
-async def user_profile( username: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)) -> dict | None:
+async def get_user_by_username( username: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)) -> dict | None:
   
     user = await repository_users.get_user_by_username(username, db)
 
     if user:
-        urer_profile = await repository_users.get_user_by_username(current_user.username, db)
-        return urer_profile
+        return user
     else:
         raise HTTPException(status_code=404, detail="This not found")
+
+@router.get("/find_by_mail/{by_email}", response_model=UserDb)
+async def get_user_by_email( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)) -> dict | None:
+     urer  = await repository_users.get_user_by_email(email, db)
+     return urer 
+ 
+    # user = await repository_users.get_user_by_email(email, db)
+
+    # # if user:
+    # return user
+    # # else:
+    # #     raise HTTPException(status_code=404, detail="This not found")
 
 @router.patch("/ban", name="ban_user", dependencies=[Depends(Admin)],  response_model=UserDb)
 async def ban_user( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):

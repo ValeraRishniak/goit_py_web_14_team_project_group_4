@@ -5,9 +5,10 @@ from app.schemas.user import UserModel, UserResponse, UserDb
 from sqlalchemy import select, func
 from sqlalchemy.orm.exc import NoResultFound
 
-async def get_user_by_email(email: str, db: Session) -> User:
-    return db.query(User).filter(User.email == email).first()
-
+async def get_user_by_email(email: str, db: Session) -> User | None:
+    user = db.query(User).filter_by(email=email).first()
+    # if user:
+    return user
 
 async def get_me(user: User, db: Session):
     user = db.query(User).filter(User.id == user.id).first()
@@ -67,9 +68,7 @@ async def make_user_role(email: str, role: Role, db: Session) -> None:
 
 async def get_user_by_username(username: str, db: Session) -> User | None:
     try:
-        # result = await db.execute(select(User).filter(User.username ==username))
-        result = db.query(User).filter(User.username == username).first()
-        return result
+             return  db.scalar(select(User).filter(User.username == username)) 
     except NoResultFound:
         return None
     
