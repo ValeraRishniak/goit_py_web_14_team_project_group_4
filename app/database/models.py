@@ -80,7 +80,7 @@ class ImageComment(Base):
     update_status = Column(Boolean, default=False)
 
     user = relationship('User', backref="comments")
-    photo = relationship('Image', backref="comments")
+    image = relationship('Image', backref="comments")
 
 
 
@@ -92,7 +92,6 @@ class User(Base):
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     avatar = Column(String(255), nullable=True)
-    is_active = Column(Boolean, default=False)
     refresh_token = Column(String(255), nullable=True)
     role = Column("role", Enum(Role), default=Role.user)
     confirmed = Column(Boolean, default=False)
@@ -125,4 +124,4 @@ class QR_code(Base):
     id = Column(Integer, primary_key=True)
     url = Column(String(255), nullable=False)
 
-    photo_id = Column(Integer, ForeignKey("images.id"))
+    image_id = Column(Integer, ForeignKey("images.id"))
