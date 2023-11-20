@@ -32,6 +32,23 @@ from app.services.auth import auth_service
 router = APIRouter(prefix="/photos", tags=["photos"])
 
 
+@router.post(
+    "/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED
+)
+async def create_foto(
+    request: Request,
+    title: str = Form(),
+    description: str = Form(),
+    tags: List = Form(None),
+    file: UploadFile = File(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
+    return await repository_photo.create_photo(
+        request, title, description, tags, file, db, current_user
+    )
+
+
 # Змінив, тепер працює
 @router.get("/", response_model=List[ImageModelsResponse])
 async def see_photos(
@@ -75,23 +92,6 @@ async def see_one_photo(
             status_code=status.HTTP_404_NOT_FOUND, detail="By id not found your photo"
         )
     return photo
-
-
-# @router.post("/ {photo_new}", response_model=PhotoModels, status_code= status.HTTP_201_CREATED)
-# async def create_photo( name: str,  file: UploadFile=File(...), db: Session=Depends(get_db),
-#                        # current_user: User = Depends(auth_service.get_current_user)
-#                        ):
-#     config_cloudinary()
-#     result = cloudinary.uploader.upload(file.file)
-#     url = result.get("url")
-
-#     new_photo = await repository_photo.create_photo(name, db,  url )
-
-#     return new_photo
-
-"""
-variant VRishniak
-"""
 
 
 @router.post(

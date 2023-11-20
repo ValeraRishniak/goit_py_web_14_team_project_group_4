@@ -91,6 +91,14 @@ class ImageComment(Base):
     id = Column(Integer, primary_key=True)
     comment_description = Column(String(255))
     created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
+    user_id = Column('user_id', ForeignKey("users.id", ondelete="CASCADE"), default=None)
+    image_id = Column('image_id', ForeignKey('images.id', ondelete='CASCADE'), default=None)
+    update_status = Column(Boolean, default=False)
+
+    user = relationship('User', backref="comments")
+    image = relationship('Image', backref="comments")
+
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
     user = relationship("User", backref="comments")
@@ -137,4 +145,4 @@ class QR_code(Base):
     id = Column(Integer, primary_key=True)
     url = Column(String(255), nullable=False)
 
-    photo_id = Column(Integer, ForeignKey("images.id"))
+    images_id = Column(Integer, ForeignKey("images.id"))

@@ -15,12 +15,6 @@ from app.repository.tags import get_tags
 from app.schemas.photo import ImageDescriptionUpdate
 
 
-# Було - не працювало
-# async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-#     return db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
-
-
-# Стало - працює
 async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
@@ -67,42 +61,7 @@ variant VRishniak
 """
 
 
-async def create_photo(
-    request: Request,
-    title: str,
-    description: str,
-    tags: List,
-    file: UploadFile,
-    db: Session,
-    current_user: User,
-) -> Image:
-    public_id = f"PhotoShake/{uuid4().hex}"
 
-    config_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=public_id)
-    url = cloudinary.CloudinaryImage(public_id).build_url(
-        width=500, height=500, crop="fill"
-    )
-
-    if tags:
-        tags = get_tags(tags[0].split(","), current_user, db)
-
-    photo = Image(
-        image_url=url,
-        title=title,
-        description=description,
-        created_at=datetime.now(),
-        updated_at=datetime.now(),
-        # tags=tags,
-        done=True,
-        user_id=current_user.id,
-        public_id=public_id,
-    )
-    db.add(photo)
-    db.commit()
-    db.refresh(photo)
-
-    return photo
 
 
 # додати роль
