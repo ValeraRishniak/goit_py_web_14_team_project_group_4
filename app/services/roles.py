@@ -1,4 +1,4 @@
-from typing import Any, List 
+from typing import List 
 from fastapi import Depends, HTTPException, status, Request
 
 from app.database.models import Role, User
@@ -11,6 +11,6 @@ class RoleChecker():
     async def __call__(self, request: Request, current_user: User = Depends(auth_service.get_current_user)):
         if current_user.role not in self.allwed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                detail="Operation forbiden, you do not have access rights")
+                                detail="Operation forbiden, you don't have access rights")
 
 
