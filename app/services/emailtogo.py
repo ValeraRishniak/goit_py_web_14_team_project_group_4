@@ -9,10 +9,10 @@ from app.services.auth import auth_service
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.mail_username,
     MAIL_PASSWORD=settings.mail_password,
-    MAIL_FROM=  settings.mail_from ,
+    MAIL_FROM=settings.mail_from,
     MAIL_PORT=settings.mail_port,
     MAIL_SERVER=settings.mail_server,
-    MAIL_FROM_NAME="Team work for python web",
+    MAIL_FROM_NAME="PhotoSHAKE App Team",
     MAIL_STARTTLS=False,
     MAIL_SSL_TLS=True,
     USE_CREDENTIALS=True,

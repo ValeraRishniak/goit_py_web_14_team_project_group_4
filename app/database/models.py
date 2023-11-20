@@ -89,27 +89,6 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
 
-class CropMode(str, enum.Enum):
-    fill = "fill"
-    thumb = "thumb"
-    fit = "fit"
-    limit = "limit"
-    pad = "pad"
-    scale = "scale"
-
-
-class BGColor(str, enum.Enum):
-    black = "black"
-    white = "white"
-    red = "red"
-    green = "green"
-    blue = "blue"
-    yellow = "yellow"
-    gray = "gray"
-    brown = "brown"
-    transparent = "transparent"
-
-
 class QR_code(Base):
     __tablename__ = "Qr_codes"
 

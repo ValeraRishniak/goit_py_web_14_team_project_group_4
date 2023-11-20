@@ -32,6 +32,7 @@ async def create_tag(values: List[ImageTagModel], db: Session) -> ImageTag:
             new_tag = ImageTag(tag_name=value.tag_name)
             db.add(new_tag)
             db.commit()
+            db.refresh(new_tag)
     return await get_tags_by_list_values(values, db)
 
 

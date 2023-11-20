@@ -1,7 +1,3 @@
-'''
-Файл погоджений. Прошу зміни не вносити.
-'''
-
 from jose import jwt, JWTError
 from typing import Optional
 from fastapi import HTTPException, status, Depends
@@ -33,7 +29,7 @@ class Auth:
     def get_password_hash(self, password: str):
         return self.pwd_context.hash(password)
 
-    #  функ. для создания нового токена доступа
+
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None):
 
         to_encode = data.copy()
@@ -47,7 +43,7 @@ class Auth:
             to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_access_token
 
-    # создания токен обновлениe
+
     async def create_refresh_token(self, data: dict, expires_delta: Optional[float] = None):
 
         to_encode = data.copy()
@@ -70,16 +66,16 @@ class Auth:
                 email = payload['sub']
                 return email
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Invalid scope for token (Неверная область действия токена)')
+                                detail='Invalid scope for token')
         except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not validate credentials (Не удалось проверить учетные данные)')
+                                detail='Could not validate credentials')
 
     async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials (Не удалось проверить учетные данные)",
+            detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

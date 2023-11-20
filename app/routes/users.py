@@ -9,7 +9,6 @@ from app.database.db import get_db
 from app.database.models import User
 from app.repository import users as repository_users
 from app.services.auth import auth_service
-from app.conf.config import settings
 from app.schemas.user import RequestEmail, RequestRole, UserDb, UserProfileModel
 
 from app.conf.config import config_cloudinary
