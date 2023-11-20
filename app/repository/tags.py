@@ -16,7 +16,7 @@ async def get_tag_by_id(tag_id: int, db: Session) -> ImageTag:
 
 
 async def get_tags_by_list_values(
-    values: list[ImageTagModel], db: Session
+    values: List[ImageTagModel], db: Session
 ) -> List[ImageTag]:
     return (
         db.query(ImageTag)
@@ -25,7 +25,7 @@ async def get_tags_by_list_values(
     )
 
 
-async def create_tag(values: list[ImageTagModel], db: Session) -> ImageTag:
+async def create_tag(values: List[ImageTagModel], db: Session) -> ImageTag:
     bd_tags = await get_tags_by_list_values(values, db)
     for value in values:
         if not any([tag.tag_name == value.tag_name for tag in bd_tags]):

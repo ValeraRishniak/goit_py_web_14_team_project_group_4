@@ -1,15 +1,6 @@
 import enum
 
-from sqlalchemy import (
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Boolean,
-    func,
-    Table,
-    Enum,
-)
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, func, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
 

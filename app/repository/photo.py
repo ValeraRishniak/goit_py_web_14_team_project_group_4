@@ -11,8 +11,9 @@ from fastapi import Request, UploadFile
 
 from app.conf.config import config_cloudinary
 from app.database.models import User, Image
-from app.repository.tags import get_tags
-from app.schemas.photo import ImageDescriptionUpdate
+from app.repository.tags import create_tag
+from app.schemas.photo import ImageModel
+from app.schemas.tags import ImageTagModel
 
 
 async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
@@ -37,9 +38,7 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
     return photo
 
 
-async def create_photo(request: Request, title: str, description: str,
-    tags: List, file: UploadFile,db: Session, current_user: User,) -> Image:
-    
+async def create_photo(title: str, description: str, tags: str,  file: UploadFile, db: Session, current_user: User,) -> Image:
     public_id = f"PhotoShake/{uuid4().hex}"
     config_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=public_id)
@@ -47,19 +46,25 @@ async def create_photo(request: Request, title: str, description: str,
         width=500, height=500, crop="fill"
     )
 
-    if tags:
-        tags = get_tags(tags[0].split(","), current_user, db)
     image = Image(
         image_url=url,
         title=title,
         description=description,
         created_at=datetime.now(),
         updated_at=datetime.now(),
-        # tags=tags,
         done=True,
         user_id=current_user.id,
         public_id=public_id,
     )
+
+    if tags:
+        result = []
+        tags = tags.split(",")
+        for tag in tags:
+            tag.strip()
+            current_tag = ImageTagModel(tag_name=tag)
+            result.append(current_tag)
+        image.tags = await create_tag(result, db)
 
     db.add(image)
     db.commit()
@@ -71,7 +76,7 @@ async def create_photo(request: Request, title: str, description: str,
 # додати роль
 # не працюють теги, якщо у свагері робити зміни, не змінюючи тегів, title i description працюють
 async def update_description(
-    photo_id: int, body: ImageDescriptionUpdate, user: User, db: Session
+    photo_id: int, body: ImageModel, user: User, db: Session
 ) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:
