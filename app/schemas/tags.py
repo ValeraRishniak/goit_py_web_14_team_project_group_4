@@ -1,6 +1,3 @@
-"""
-variant VRishniak
-"""
 from pydantic import BaseModel, Field
 
 

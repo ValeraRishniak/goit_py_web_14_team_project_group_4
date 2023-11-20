@@ -3,7 +3,6 @@ import enum
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, func, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
-
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -92,24 +91,3 @@ class User(Base):
     refresh_token = Column(String(255), nullable=True)
     role = Column("role", Enum(Role), default=Role.user)
     confirmed = Column(Boolean, default=False)
-
-
-class CropMode(str, enum.Enum):
-    fill = "fill"
-    thumb = "thumb"
-    fit = "fit"
-    limit = "limit"
-    pad = "pad"
-    scale = "scale"
-
-
-class BGColor(str, enum.Enum):
-    black = "black"
-    white = "white"
-    red = "red"
-    green = "green"
-    blue = "blue"
-    yellow = "yellow"
-    gray = "gray"
-    brown = "brown"
-    transparent = "transparent"
