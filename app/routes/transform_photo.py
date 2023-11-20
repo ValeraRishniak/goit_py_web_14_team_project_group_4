@@ -38,4 +38,4 @@ async def show_qr(
     photo = await transform_photo.show_qr(photo_id, current_user, db)
     if photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT_FOUND")
-    return StreamingResponse(photo, media_type="image/png")
+    return StreamingResponse(photo, status_code=201, media_type="image/png")

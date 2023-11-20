@@ -1,17 +1,11 @@
 from typing import List
-import cloudinary
-import cloudinary.uploader
-import shutil
 
-from app.database.models import CropMode, BGColor
-from app.conf.config import config_cloudinary
-
-from fastapi_limiter.depends import RateLimiter
 from fastapi import (
     APIRouter,
+    Body,
     HTTPException,
     Depends,
-    Request,
+    Query,
     status,
     File,
     UploadFile,
@@ -21,11 +15,11 @@ from sqlalchemy.orm import Session
 
 from app.database.db import get_db
 
-from app.schemas.photo import ImageDescriptionUpdate, ImageModelsResponse
+from app.schemas.photo import ImageModel, ImageModelsResponse
 from app.repository import photo as repository_photo
-from app.repository import photo_Cloudinary as repository_photo_cloudinary
 
 from app.repository.users import User
+from app.schemas.tags import ImageTagModel
 from app.services.auth import auth_service
 
 
@@ -57,7 +51,7 @@ async def see_only_my_photos(
     photos = await repository_photo.get_my_photos(skip, limit, current_user, db)
     if photos is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Your foto not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Your photo not found"
         )
     return photos
 
@@ -80,23 +74,22 @@ async def see_one_photo(
 @router.post(
     "/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED
 )
-async def create_foto(
-    request: Request,
+async def create_photo(
     title: str = Form(),
     description: str = Form(),
-    tags: List = Form(None),
-    file: UploadFile = File(None),
+    tags: str = Form(None),
+    file: UploadFile = File(),
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
 ):
     return await repository_photo.create_photo(
-        request, title, description, tags, file, db, current_user
+        title, description, tags, file, db, current_user
     )
 
 
 @router.put("/{photo_id}", response_model=ImageModelsResponse)
 async def update_description(
-    body: ImageDescriptionUpdate,
+    body: ImageModel,
     photo_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
