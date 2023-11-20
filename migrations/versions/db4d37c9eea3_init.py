@@ -1,8 +1,8 @@
 """Init
 
-Revision ID: 652f935c5823
+Revision ID: db4d37c9eea3
 Revises: 
-Create Date: 2023-11-20 12:04:07.250684
+Create Date: 2023-11-20 18:52:14.694480
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '652f935c5823'
+revision: str = 'db4d37c9eea3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -54,13 +54,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('tag_name')
     )
-    op.create_table('Qr_codes',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('url', sa.String(length=255), nullable=False),
-    sa.Column('photo_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['photo_id'], ['images.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('comments',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('comment_description', sa.String(length=255), nullable=True),
@@ -97,7 +90,6 @@ def downgrade() -> None:
     op.drop_table('image_m2m_comment')
     op.drop_table('image_m2m_tag')
     op.drop_table('comments')
-    op.drop_table('Qr_codes')
     op.drop_table('tags')
     op.drop_table('images')
     op.drop_table('users')
