@@ -105,6 +105,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     avatar = Column(String(255), nullable=True)
+    is_active = Column(Boolean, default=False)
     refresh_token = Column(String(255), nullable=True)
     role = Column("role", Enum(Role), default=Role.user)
     confirmed = Column(Boolean, default=False)
