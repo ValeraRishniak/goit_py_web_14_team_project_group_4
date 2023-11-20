@@ -3,9 +3,9 @@ from pydantic import BaseModel, Field, EmailStr
 from app.database.models import Role
 
 class UserModel(BaseModel):
-    username: str = Field(min_length=5, max_length=16)
+    username: str = Field(min_length=4, max_length=16)
     email: str
-    password: str = Field(min_length=6, max_length=10)
+    password: str = Field(min_length=6, max_length=16)
 
 
 class UserDb(BaseModel):

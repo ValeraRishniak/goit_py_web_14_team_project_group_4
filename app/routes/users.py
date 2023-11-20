@@ -17,7 +17,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/me/", response_model=UserDb)
-async def read_users_me(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+async def read_my_users(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     user = await repository_users.get_me(current_user, db)
     return user
 
@@ -59,7 +59,7 @@ async def user_profile( username: str, current_user: User = Depends(auth_service
     user = await repository_users.get_user_by_username(username, db)
 
     if user:
-        urer_profile = await repository_users.get_user_profile(user.username, db)
+        urer_profile = await repository_users.get_user_by_username(current_user.username, db)
         return urer_profile
     else:
         raise HTTPException(status_code=404, detail="This not found")
