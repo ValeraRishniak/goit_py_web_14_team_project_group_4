@@ -40,7 +40,6 @@ async def signup(
             status_code=status.HTTP_409_CONFLICT, detail="Account already exists"
         )
     body.password = auth_service.get_password_hash(body.password)
-    # new_user = await repository_users.create_user(body, db)
     new_user = await repository_users.create_user(body, db)
     background_tasks.add_task(send_email, new_user.email , new_user.username, request.base_url)
     return {

@@ -7,13 +7,17 @@ from sqlalchemy.orm.exc import NoResultFound
 
 async def get_user_by_email(email: str, db: Session) -> User | None:
     user = db.query(User).filter_by(email=email).first()
-    # if user:
     return user
 
 async def get_me(user: User, db: Session):
     user = db.query(User).filter(User.id == user.id).first()
     return user
 
+async def create_admin_user(user: User, db: Session) :
+    admin = db.query(User).filter(User.id == user.id).first()
+    admin.role = Role.admin
+    db.commit()
+    return admin
 
 async def create_user(body: UserModel, db: Session) -> User:
     avatar = None
@@ -62,7 +66,7 @@ async def make_user_role(email: str, role: Role, db: Session) -> None:
     try:
         await db.commit()
     except Exception as e:
-        await db.rollback()
+        db.rollback()
         raise e
 
 
@@ -71,25 +75,7 @@ async def get_user_by_username(username: str, db: Session) -> User | None:
              return  db.scalar(select(User).filter(User.username == username)) 
     except NoResultFound:
         return None
-    
-# async def get_user_profile(username: str, db: Session) -> User:
-#     query = select(User).filter(User.username == username)
-#     # user = await db.execute(query)
-#     user = db.execute(query)
 
-#     if user:
-#         user_profile = UserResponse(
-#             user= UserDb,      
-#             # id=user.id,       
-#             # role=user.role,
-#             # username=user.username,
-#             # email=user.email,
-#             # avatar=user.avatar,
-#             # create_at=user.created_at,
-#             is_active=True,
-#         )
-#         return user_profile
-#     return None
   
 async def ban_user(email: str, db: Session) -> None:
     user = await get_user_by_email(email, db)
@@ -100,3 +86,14 @@ async def ban_user(email: str, db: Session) -> None:
         await db.rollback()
         raise e
 
+async def razban_user(email: str, db: Session) -> None:
+    user = await get_user_by_email(email, db)
+    user.is_active = True
+    try:
+        await db.commit()
+    except Exception as e:
+        await db.rollback()
+        raise e
+    
+async def get_users(skip: int, limit: int, db: Session) -> list[User]:
+    return db.query(User).offset(skip).limit(limit).all()

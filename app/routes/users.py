@@ -9,17 +9,24 @@ from app.database.models import User, Role
 from app.repository import users as repository_users
 from app.services.auth import auth_service
 from app.conf.config import settings, init_async_redis
-from app.schemas.user import UserDb
+from app.schemas.user import UserDb, UserResponse
 from app.services.roles import Admin_Moder, Admin
 from app.conf.config import config_cloudinary
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
+# @router.patch("/admin/create", response_model=UserDb )
+# async def create_admin(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+#     admin = await repository_users.create_admin_user(current_user , db)
+#     return admin
+    
+
 @router.get("/me/", response_model=UserDb)
 async def read_my_users(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     user = await repository_users.get_me(current_user, db)
     return user
+
 
 
 @router.patch('/avatar', response_model=UserDb)
@@ -34,24 +41,20 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     user = await repository_users.update_avatar(current_user.email, src_url, db)
     return user
 
-@router.patch("/asign_role/{role}", dependencies=[Depends(Admin)], response_model=UserDb)
-async def assign_role( email: str, role: Role, db: Session = Depends(get_db), redis_client: Redis = Depends(init_async_redis)):
-    
-    key_to_clear = f"user:{email}"
-    await redis_client.delete(key_to_clear)
+@router.get("/all Users/", response_model=list[UserDb])
+async def read_all_users(skip: int = 0, limit: int = 25, db: Session = Depends(get_db)):
+    return await repository_users.get_users(skip, limit, db)
 
+@router.patch("/asign_role/{role}",  dependencies=[Depends(Admin)] , response_model=UserDb)
+async def assign_role( email: str, role: Role, db: Session = Depends(get_db)): 
     user = await repository_users.get_user_by_email(email, db)
-
     if not user:
-        raise HTTPException( status_code=status.HTTP_401_UNAUTHORIZED, detail="No this Email")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    if user.role == role:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user already has this role installed")
 
-    if role == user.role:
-        return {"message": "Role is already exists"}
-    else:
-        await repository_users.make_user_role(email, role, db)
-        return {"message": f"User role changed to {role.value}"}
-
-
+    return await repository_users.make_user_role(email, role, db)
+   
 
 @router.get("/{username}", response_model=UserDb)
 async def get_user_by_username( username: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)) -> dict | None:
@@ -68,13 +71,6 @@ async def get_user_by_email( email: str, current_user: User = Depends(auth_servi
      urer  = await repository_users.get_user_by_email(email, db)
      return urer 
  
-    # user = await repository_users.get_user_by_email(email, db)
-
-    # # if user:
-    # return user
-    # # else:
-    # #     raise HTTPException(status_code=404, detail="This not found")
-
 @router.patch("/ban", name="ban_user", dependencies=[Depends(Admin)],  response_model=UserDb)
 async def ban_user( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
   
@@ -92,3 +88,21 @@ async def ban_user( email: str, current_user: User = Depends(auth_service.get_cu
         return {"message": "User is banned"}
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="You banned this User")
+
+@router.patch("/razban", name="razban_user", dependencies=[Depends(Admin)], response_model=UserDb)
+async def razban_user( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+    user = await repository_users.get_user_by_email(email, db)
+
+    if user.id == current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= 'You razban yourself')
+
+    if not user:
+        raise HTTPException(status_code=404, detail="No this Email")
+
+    if not user.is_active:
+        await repository_users.activate_user(user.email, db)
+
+        return {"message": "User is razbanned"}
+    else:
+        raise HTTPException( status_code=status.HTTP_409_CONFLICT, detail='This email is already active')
+
