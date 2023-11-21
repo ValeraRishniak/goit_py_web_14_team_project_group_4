@@ -54,7 +54,7 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     return user
 
 
-@router.get("/all", response_model=List[UserDb],
+@router.get("/all", response_model=List[UserDb], 
             dependencies=[Depends(access_get)]
             )
 async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
@@ -67,7 +67,7 @@ async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(g
           operationId: read_all_users
           parameters:
             - name: skip (optional)  # The number of records to skip before returning results, default is 0 (no records skipped).  Used for pagination purposes.   See https://docs.mongodb.com/manual/reference/method/cursor.skip/#cursor-skip-examples for more information on how this
-
+    
     :param skip: int: Skip the first n records
     :param limit: int: Limit the number of results returned
     :param db: Session: Pass the database connection to the function
@@ -85,7 +85,7 @@ async def read_user_profile_by_username(username: str, db: Session = Depends(get
     """
     The read_user_profile_by_username function is used to read a user profile by username.
         The function takes in the username as an argument and returns the user profile if it exists.
-
+    
     :param username: str: Get the username from the url path
     :param db: Session: Pass the database session to the repository layer
     :param current_user: User: Get the current user's information
@@ -98,8 +98,10 @@ async def read_user_profile_by_username(username: str, db: Session = Depends(get
     return user_profile
 
 
-@router.patch("/make_role/{email}/",
-              dependencies=[Depends(access_admin)]
+
+
+@router.patch("/make_role/{email}/", 
+                dependencies=[Depends(access_admin)]
               )
 async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
     """
@@ -108,7 +110,7 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
         parameters. If no such user exists, then an HTTPException is raised with status code 401 (Unauthorized)
         and detail message &quot;Invalid Email&quot;. If the new role matches that of the current one, then a message saying so
         will be returned. Otherwise, if all goes well, then a success message will be returned.
-
+    
     :param body: RequestRole: Get the email and role from the request body
     :param db: Session: Access the database
     :return: A dictionary with a message key
@@ -124,7 +126,7 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
         return {"message": f"User role changed to {body.role.value}"}
 
 
-@router.patch("/ban/{email}/",
+@router.patch("/ban/{email}/", 
               dependencies=[Depends(access_admin)]
               )
 async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
@@ -134,12 +136,13 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
         detail message &quot;Invalid Email&quot;. If the user has already been banned, an HTTPException is raised with status code 409
         (Conflict) and detail message &quot;User Already Not Active&quot;. Otherwise, if no exceptions are thrown, we return a JSON object
         containing key-value pair {&quot;message&quot;: USER_NOT_ACTIVE}.
-
+    
     :param body: RequestEmail: Get the email from the request body
     :param db: Session: Get the database session
     :return: A dictionary with a message
     """
     user = await repository_users.get_user_by_email(body.email, db)
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Email not found")
@@ -149,7 +152,7 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="User already is banned")
-
+    
 
 @router.patch("/remove from ban/{email}/", response_model=UserDb,
               dependencies=[Depends(access_admin)])

@@ -18,7 +18,7 @@ router = APIRouter(prefix="/comments", tags=["comments"])
 access_get = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_create = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
-access_delete = RoleChecker([Role.admin, Role.user])
+access_delete = RoleChecker([Role.admin, Role.moderator])
 
 
 #Користувачі можуть коментувати світлини один одного:
