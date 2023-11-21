@@ -170,7 +170,6 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
 
 @router.patch(
     "/remove from ban/{email}/",
-    response_model=UserDb,
     dependencies=[Depends(access_admin)],
 )
 async def remove_from_ban(body: RequestEmail, db: Session = Depends(get_db)):
@@ -198,6 +197,6 @@ async def remove_user(user_id: int, db: Session = Depends(get_db)):
     us = await repository_users.delete_user(user_id, db)
     if us is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_204_NO_CONTENT, detail="User successfully deleted"
         )
     return us
