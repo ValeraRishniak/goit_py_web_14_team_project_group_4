@@ -10,10 +10,10 @@ from app.schemas.transform import TransformBodyModel
 
 
 async def transform_method(
-    photo_id: int, body: TransformBodyModel, user: User, db: Session
+    photo_id: int, body: TransformBodyModel, user: User, db: Session, image_id: int,
 ) -> Image | None:
     photo = (
-        db.query(Image).filter(Image.user_id == user.id, Image.id == photo_id).first()
+        db.query(Image).filter(Image.user_id == user.id, Image.id== photo_id).first()
     )
     if photo:
         transformation = []
