@@ -12,6 +12,17 @@ from app.schemas.transform import TransformBodyModel
 async def transform_method(
     photo_id: int, body: TransformBodyModel, user: User, db: Session
 ) -> Image | None:
+    """
+    The transform_method function creates a transformation list that will be used to transform the image using Cloudinary's API.
+    The function then checks if each filter is being used by checking if its use_filter attribute is True or False.
+    If True, it adds all of its attributes to the transformation list as parameters for Cloudinary's API call.
+
+    :param photo_id: int: Get the photo from the database
+    :param body: TransformBodyModel: Pass the data from the frontend to this function
+    :param user: User: Get the user id from the logged in user
+    :param db: Session: Access the database
+    :return: The photo object with the new transform_url
+    """
     photo = (
         db.query(Image).filter(Image.user_id == user.id, Image.id == photo_id).first()
     )
@@ -95,6 +106,14 @@ async def transform_method(
 
 
 async def show_qr(photo_id: int, user: User, db: Session) -> Image | None:
+    """
+    The show_qr function takes a photo_id and user, and returns an image of the QR code for that photo.
+
+    :param photo_id: int: Get the photo from the database
+    :param user: User: Get the user's id
+    :param db: Session: Pass the database session to the function
+    :return: A buffer, which is a memory-only file
+    """
     photo = (
         db.query(Image).filter(Image.user_id == user.id, Image.id == photo_id).first()
     )
