@@ -17,6 +17,7 @@ class CommentResponse(CommentBase):
 
 
 class CommentUpdateResponse(CommentBase):
+    id: int
     updated_at: datetime
     update_status: bool = True
 

@@ -12,7 +12,7 @@ from app.services.auth import auth_service
 router = APIRouter(prefix="/tags", tags=["tags"])
 
 
-@router.get("/all tags/", response_model=List[ImageTagResponse])
+@router.get("/all_tags/", response_model=List[ImageTagResponse])
 async def read_tags(
     skip: int = 0,
     limit: int = 25,
@@ -22,7 +22,7 @@ async def read_tags(
     return await repository_tags.get_tags(skip, limit, db)
 
 
-@router.get("/get tag by id/{tag_id}", response_model=ImageTagResponse)
+@router.get("/get_tag_by_id/{tag_id}", response_model=ImageTagResponse)
 async def read_tag(
     tag_id: int,
     current_user: User = Depends(auth_service.get_current_user),
@@ -36,7 +36,9 @@ async def read_tag(
     return tag
 
 
-@router.post("/", response_model=List[ImageTagResponse])
+@router.post(
+    "/", response_model=List[ImageTagResponse], status_code=status.HTTP_201_CREATED
+)
 async def create_tag(
     tags: List[ImageTagModel],
     current_user: User = Depends(auth_service.get_current_user),
