@@ -27,10 +27,15 @@ from app.database.models import Role
 
 router = APIRouter(prefix="/photos", tags=["photos"])
 
-ALLOWED_ROLE = RoleChecker([Role.admin, Role.user])
+access_get = RoleChecker([Role.admin, Role.moderator, Role.user])
+access_create = RoleChecker([Role.admin, Role.moderator, Role.user])
+access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
+access_delete = RoleChecker([Role.admin, Role.user])
 
 
-@router.get("/my_photos", response_model=List[ImageWithCommentModelsResponse])
+@router.get("/my_photos", response_model=List[ImageWithCommentModelsResponse],
+             dependencies=[Depends(access_get)]
+             )
 async def see_my_photos(
     skip: int = 0,
     limit: int = 25,
@@ -45,7 +50,9 @@ async def see_my_photos(
     return photos
 
 
-@router.get("/by_id/{photo_id}", response_model=ImageModelsResponse)
+@router.get("/by_id/{photo_id}", response_model=ImageModelsResponse, 
+            dependencies=[Depends(access_get)]
+            )
 async def see_one_photo(
     photo_id: int,
     db: Session = Depends(get_db),
@@ -59,9 +66,9 @@ async def see_one_photo(
     return photo
 
 
-@router.post(
-    "/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED,
+              dependencies=[Depends(access_create)]
+            )
 async def create_foto(
     title: str = Form(),
     description: str = Form(),
@@ -75,7 +82,8 @@ async def create_foto(
     )
 
 
-@router.put("/{photo_id}", response_model=ImageModelsResponse, dependencies=[Depends(ALLOWED_ROLE)])
+@router.put("/{photo_id}", response_model=ImageModelsResponse, 
+            dependencies=[Depends(access_update)])
 async def update_description(
     body: ImageModel,
     photo_id: int,
@@ -91,7 +99,8 @@ async def update_description(
     return photo
 
 
-@router.delete("/{photo_id}", response_model=ImageModelsResponse, dependencies=[Depends(ALLOWED_ROLE)])
+@router.delete("/{photo_id}", response_model=ImageModelsResponse, 
+               dependencies=[Depends(access_delete)])
 async def remove_photo(
     photo_id: int,
     db: Session = Depends(get_db),

@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 from libgravatar import Gravatar
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.database.models import BanToken, Image, ImageComment, Role, User
 from app.schemas.user import UserModel, UserProfileModel
@@ -23,6 +24,11 @@ async def create_user(body: UserModel, db: Session) -> User:
     except Exception as e:
         print(e)
     new_user = User(**body.model_dump(), avatar=avatar)
+    new_user.role = Role.user
+    result = db.execute(select(User))
+    userscount = len(result.all())
+    if not userscount:
+        new_user.role = Role.admin
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -32,6 +38,17 @@ async def create_user(body: UserModel, db: Session) -> User:
 async def update_token(user: User, token: str | None, db: Session) -> None:
     user.refresh_token = token
     db.commit()
+
+
+async def update_user_inform(email:str, 
+                             username:str|None, 
+                             password:str|None,
+                             db: Session) -> User:
+    user =  db.query(User).filter_by(email=email).first()
+    user.password = password
+    user.username = username
+    db.commit()
+    return user
 
 
 async def confirmed_email(email: str, db: Session) -> None:
@@ -87,22 +104,6 @@ async def get_user_profile(username: str, db: Session) -> User:
     return None
 
 
-async def ban_user(email: str, db: Session) -> None:
-
-    """
-    The ban_user function takes in an email and a database session.
-    It then finds the user with that email, sets their is_active field to False,
-    and commits the change to the database.
-
-    :param email: str: Identify the user to be banned
-    :param db: Session: Pass in the database session
-    :return: None, because we don't need to return anything
-    """
-    user = await get_user_by_email(email, db)
-    user.is_active = False
-    db.commit()
-
-
 async def make_user_role(email: str, role: Role, db: Session) -> None:
 
     """
@@ -120,56 +121,51 @@ async def make_user_role(email: str, role: Role, db: Session) -> None:
     user.role = role
     db.commit()
 
+
 '''
                             BAN 
 If you haven't been banned, you haven't been in the garden of chat Bizarre :)
 '''
 
 
-async def add_to_blacklist(token: str, db: Session) -> None:
+
+async def ban_user(email: str, db: Session) -> None:
+
     """
-    The add_to_blacklist function adds a token to the blacklist.
-        Args:
-            token (str): The JWT that is being blacklisted.
-            db (Session): The database session object used for querying and updating the database.
-    
-    :param token: str: Pass the token to be blacklisted
-    :param db: Session: Create a new session with the database
-    :return: None
+    The ban_user function takes in an email and a database session.
+    It then finds the user with that email, sets their is_active field to False,
+    and commits the change to the database.
+
+    :param email: str: Identify the user to be banned
+    :param db: Session: Pass in the database session
+    :return: None, because we don't need to return anything
     """
-    blacklist_token = BanToken(
-        token=token, banned_on=datetime.now())
-    db.add(blacklist_token)
+    user = await get_user_by_email(email, db)
+    user.is_active = False
     db.commit()
-    db.refresh(blacklist_token)
 
 
-async def find_blacklisted_token(token: str, db: Session) -> None:
-    """
-    The find_blacklisted_token function takes a token and database session as arguments.
-    It then queries the BlacklistToken table for any tokens that match the one passed in.
-    If it finds a matching token, it returns that object.
-    
-    :param token: str: Pass the token to be checked
-    :param db: Session: Connect to the database
-    :return: A blacklisttoken object or none
-    """
-    blacklist_token = db.query(BanToken).filter(
-        BanToken.token == token).first()
-    return blacklist_token
+async def remove_from_ban(email: str, db: Session) -> None:
+    user = await get_user_by_email(email, db)
+    user.is_active = True
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
 
 
-async def remove_from_blacklist(token: str, db: Session) -> None:
-    """
-    The remove_from_blacklist function removes a token from the blacklist.
-        Args:
-            token (str): The JWT to remove from the blacklist.
-            db (Session): A database session object.
-    
-    :param token: str: Specify the token to be removed from the blacklist
-    :param db: Session: Access the database
-    :return: None
-    """
-    blacklist_token = db.query(BanToken).filter(
-        BanToken.token == token).first()
-    db.delete(blacklist_token)
+async def activate_user(email: str, db: Session) -> None:
+    user = await get_user_by_email(email, db)
+    user.is_active = True
+    db.commit()
+
+
+async def delete_user(user_id: int, db: Session) -> None:
+    user = db.query(User).filter(User.id == user_id).first()
+    try:
+        db.delete(user)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e

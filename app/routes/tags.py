@@ -12,6 +12,7 @@ from app.services.auth import auth_service
 router = APIRouter(prefix="/tags", tags=["tags"])
 
 
+
 @router.get("/all tags/", response_model=List[ImageTagResponse])
 async def read_tags(skip: int = 0, limit: int = 25, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     return await repository_tags.get_tags(skip, limit, db)
