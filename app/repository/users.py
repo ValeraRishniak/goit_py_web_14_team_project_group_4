@@ -138,6 +138,7 @@ async def get_user_profile(username: str, db: Session) -> User:
     user = db.query(User).filter(User.username == username).first()
     if user:
         photo_count = db.query(Image).filter(Image.user_id == user.id).count()
+
         comment_count = (
             db.query(ImageComment).filter(ImageComment.user_id == user.id).count()
         )
@@ -151,7 +152,6 @@ async def get_user_profile(username: str, db: Session) -> User:
             comment_count=comment_count,
         )
         return user_profile
-    return None
 
 
 async def make_user_role(email: str, role: Role, db: Session) -> None:

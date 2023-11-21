@@ -18,7 +18,6 @@ class UserDb(BaseModel):
     created_at: datetime
     avatar: str
 
-
     class Config:
         from_attributes = True
 
@@ -30,15 +29,13 @@ class UserResponse(BaseModel):
 
 
 class UserProfileModel(BaseModel):
-    username: str 
+    username: str
     email: EmailStr
     avatar: Optional[str]
     photo_count: Optional[int]
     comment_count: Optional[int]
-    rates_count: Optional[int]
     is_active: Optional[bool]
     created_at: datetime
-
 
 
 class TokenModel(BaseModel):

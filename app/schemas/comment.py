@@ -7,6 +7,7 @@ class CommentBase(BaseModel):
 
 
 class CommentResponse(CommentBase):
+    id: int
     user_id: int
     created_at: datetime
     update_status: bool = False

@@ -21,7 +21,7 @@ async def create_comment(
     """
     image = db.query(Image).filter(Image.id == image_id).first()
     comment = ImageComment(
-        comment_description=body.comment_description, user_id=user.id
+        comment_description=body.comment_description, user_id=user.id, image_id=image_id
     )
     db.add(comment)
     db.commit()
