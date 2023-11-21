@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import List
 from pydantic import BaseModel, Field
 from app.schemas.comment import CommentResponse
-
 from app.schemas.tags import ImageTagModel, ImageTagResponse
 
 

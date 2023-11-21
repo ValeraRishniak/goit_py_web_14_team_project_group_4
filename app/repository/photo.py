@@ -16,6 +16,7 @@ from app.schemas.photo import ImageModel
 from app.schemas.tags import ImageTagModel
 
 
+
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
@@ -29,6 +30,7 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
         .first()
     )
     return photo
+
 
 
 async def create_photo(
