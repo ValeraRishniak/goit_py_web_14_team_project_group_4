@@ -7,10 +7,6 @@ from app.database.models import Image, ImageComment, User
 from app.schemas.comment import CommentBase
 
 
-<<<<<<< Updated upstream
-async def create_comment(image_id: int, body: CommentBase, user: User, db: Session) -> ImageComment:
-
-=======
 async def create_comment(
     image_id: int, body: CommentBase, user: User, db: Session
 ) -> ImageComment:
@@ -23,7 +19,6 @@ async def create_comment(
     :param db: Session: Create a database session
     :return: A list of comments
     """
->>>>>>> Stashed changes
     image = db.query(Image).filter(Image.id == image_id).first()
     comment = ImageComment(
         comment_description=body.comment_description, user_id=user.id
@@ -39,11 +34,6 @@ async def create_comment(
     return [comment]
 
 
-<<<<<<< Updated upstream
-
-async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: User) -> ImageComment | None:
-
-=======
 async def edit_comment(
     comment_id: int, body: CommentBase, db: Session, user: User
 ) -> ImageComment | None:
@@ -56,7 +46,6 @@ async def edit_comment(
     :param user: User: Check if the user is authorized to edit the comment
     :return: The updated comment or none if the comment with the specified id was not found
     """
->>>>>>> Stashed changes
     comment = db.query(ImageComment).filter(ImageComment.id == comment_id).first()
     if comment:
         # додати перевірку ролей
@@ -102,10 +91,6 @@ async def show_single_comment(
     )
 
 
-<<<<<<< Updated upstream
-async def show_my_comments(user_id: int, image_id: int, db: Session) -> List[ImageComment] | None:
-    return db.query(ImageComment).filter(and_(ImageComment.image_id == image_id, ImageComment.user_id == user_id)).all()
-=======
 async def show_my_comments(
     user_id: int, image_id: int, db: Session
 ) -> List[ImageComment] | None:
@@ -124,7 +109,6 @@ async def show_my_comments(
         )
         .all()
     )
->>>>>>> Stashed changes
 
 
 async def show_user_photo_comments(
