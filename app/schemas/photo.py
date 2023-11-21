@@ -2,16 +2,14 @@ from pydantic import BaseModel, validator
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel, Field
-
 from app.schemas.comment import CommentResponse
 from app.schemas.tags import ImageTagModel, ImageTagResponse
 
 
 class ImageModel(BaseModel):
-    image_url: str = Field(max_length=300, default=None)
     title: str = Field(max_length=45)
     description: str = Field(max_length=255)
-    tags: List[ImageTagModel] = []
+    tags: List[ImageTagModel]
 
     @validator("tags")
     def validate_tags(cls, v):
@@ -27,7 +25,6 @@ class ImageModelsResponse(ImageModel):
     id: int
     created_at: datetime
     updated_at: datetime
-
 
     class Config:
         from_attributes = True

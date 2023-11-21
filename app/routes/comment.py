@@ -1,7 +1,7 @@
 from typing import List
 
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, HTTPException, Depends, status, Path 
+from fastapi import APIRouter, HTTPException, Depends, status, Path
 from fastapi_limiter.depends import RateLimiter
 
 
@@ -21,19 +21,14 @@ access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_delete = RoleChecker([Role.admin, Role.moderator])
 
 
-#Користувачі можуть коментувати світлини один одного:
-
-# done - its work
 @router.post("/", response_model=List[CommentResponse], status_code=status.HTTP_201_CREATED, dependencies=[Depends(access_create)])
 async def create_comment( image_id: int,
                           body: CommentBase, 
                           db: Session = Depends(get_db),
                           current_user: User = Depends(auth_service.get_current_user)):
-    comment = await repository_comment.create_comment(image_id, body, db, current_user)
+    return await repository_comment.create_comment(image_id, body, current_user, db)
 
-    return comment
-
-
+  
 @router.put("/edit/{comment_id}", response_model=CommentUpdateResponse, 
             dependencies=[Depends(access_update)]
             )
@@ -57,7 +52,7 @@ async def delete_comment(comment_id: int, db: Session = Depends(get_db),
             status_code=status.HTTP_404_NOT_FOUND, detail='COMMENT NOT FOUND')
     return deleted_comment
 
-# підключити ролі
+
 @router.get("/single comment/{comment_id}", response_model=CommentResponse, 
             dependencies=[Depends(access_get)]
             )
@@ -68,8 +63,8 @@ async def single_comment(comment_id: int, db: Session = Depends(get_db),
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='COMMENT NOT FOUND')
     return comment
-
-
+  
+  
 @router.get("/user comments/{user_id}", response_model=List[CommentResponse],
              dependencies=[Depends(access_get)]
             )
@@ -80,8 +75,8 @@ async def by_user_comments(user_id: int, db: Session = Depends(get_db),
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='COMMENT NOT FOUND')
     return comments
-
-
+  
+  
 @router.get("/foto_by_author/{user_id}/{foto_id}", response_model=List[CommentResponse],
             dependencies=[Depends(access_get)]
             )
@@ -92,4 +87,3 @@ async def by_user_foto_comments(user_id: int, image_id: int, db: Session = Depen
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='COMMENT NOT FOUND')
     return comments
-

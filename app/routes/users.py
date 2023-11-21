@@ -1,3 +1,4 @@
+
 from typing import List
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
 from sqlalchemy.orm import Session
@@ -11,6 +12,7 @@ from app.repository import users as repository_users
 from app.schemas.user import RequestEmail, RequestRole, UserDb, UserProfileModel
 from app.services.auth import auth_service
 from app.services.roles import RoleChecker
+from app.schemas.user import UserDb
 from app.conf.config import config_cloudinary
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -22,13 +24,15 @@ access_delete = RoleChecker([Role.admin, Role.user])
 access_admin = RoleChecker([Role.admin])
 
 
+
 @router.get("/me/", response_model=UserDb, dependencies=[Depends(access_get)])
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+
     user = await repository_users.get_me(current_user, db)
     return user
 
 
-@router.patch('/update_user_access_info', response_model=UserDb, dependencies=[Depends(access_create)])
+@router.patch('/update_user_access_info', response_model=UserDb, dependencies=[Depends(access_update)])
 async def update_all_inform_user(
         username: str | None,
         password: str | None,
@@ -41,15 +45,18 @@ async def update_all_inform_user(
     return user
 
 
-@router.patch('/update avatar', response_model=UserDb, dependencies=[Depends(access_create)])
+@router.patch('/update avatar', response_model=UserDb, dependencies=[Depends(access_update)])
 async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
                              db: Session = Depends(get_db)):
+
     config_cloudinary()
 
     r = cloudinary.uploader.upload(
-        file.file, public_id=f'PhotoSHAKE/{current_user.id}', overwrite=True)
-    src_url = cloudinary.CloudinaryImage(f'PhotoSHAKE/{current_user.id}')\
-                        .build_url(width=250, height=250, crop='fill', version=r.get('version'))
+        file.file, public_id=f"PhotoSHAKE/{current_user.id}", overwrite=True
+    )
+    src_url = cloudinary.CloudinaryImage(f"PhotoSHAKE/{current_user.id}").build_url(
+        width=250, height=250, crop="fill", version=r.get("version")
+    )
     user = await repository_users.update_avatar(current_user.email, src_url, db)
     return user
 

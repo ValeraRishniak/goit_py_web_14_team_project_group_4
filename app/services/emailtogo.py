@@ -17,22 +17,26 @@ conf = ConnectionConfig(
     MAIL_SSL_TLS=True,
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent / 'templates',
+    TEMPLATE_FOLDER=Path(__file__).parent / "templates",
 )
 
 
 async def send_email(email: EmailStr, username: str, host: str):
     """
     The send_email function sends an email to the user with a link to confirm their email address.
-       
+
     """
     try:
         token_verification = auth_service.create_email_token({"sub": email})
         message = MessageSchema(
             subject="Confirm your email ",
             recipients=[email],
-            template_body={"host": host, "username": username, "token": token_verification},
-            subtype=MessageType.html
+            template_body={
+                "host": host,
+                "username": username,
+                "token": token_verification,
+            },
+            subtype=MessageType.html,
         )
 
         fm = FastMail(conf)

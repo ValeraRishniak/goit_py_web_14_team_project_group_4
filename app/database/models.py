@@ -3,7 +3,6 @@ import enum
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, func, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import DateTime
-
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -44,20 +43,23 @@ class Image(Base):
     transform_url = Column(String(500), nullable=True)
     public_id = Column(String(255))
     user_id = Column(ForeignKey("users.id", ondelete="CASCADE"), default=None)
-    
+
     user = relationship("User", backref="images")
     tags = relationship("ImageTag", secondary=image_m2m_tag, backref="images")
-    comment = relationship("ImageComment", secondary=image_m2m_comment, backref="images")
-
+    comment = relationship(
+        "ImageComment", secondary=image_m2m_comment, backref="images"
+    )
 
 
 class ImageTag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     tag_name = Column(String(25), unique=True)
-    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
-    
-    user = relationship('User', backref="tags")
+    user_id = Column(
+        "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
+    )
+
+    user = relationship("User", backref="tags")
 
 
 class ImageComment(Base):
@@ -66,13 +68,16 @@ class ImageComment(Base):
     comment_description = Column(String(255))
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
-    user_id = Column('user_id', ForeignKey("users.id", ondelete="CASCADE"), default=None)
-    image_id = Column('image_id', ForeignKey('images.id', ondelete='CASCADE'), default=None)
+    user_id = Column(
+        "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
+    )
+    image_id = Column(
+        "image_id", ForeignKey("images.id", ondelete="CASCADE"), default=None
+    )
     update_status = Column(Boolean, default=False)
 
-    user = relationship('User', backref="comments")
-    image = relationship('Image', backref="comments")
-
+    user = relationship("User", backref="comments")
+    image = relationship("Image", backref="comments")
 
 
 class User(Base):
@@ -104,3 +109,4 @@ class BanToken(Base):
     id = Column(Integer, primary_key=True)
     token = Column(String(500), unique=True, nullable=False)
     banned_on = Column(DateTime, default=func.now())
+

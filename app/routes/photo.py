@@ -1,9 +1,4 @@
 from typing import List
-import cloudinary
-import cloudinary.uploader
-
-
-from fastapi_limiter.depends import RateLimiter
 from fastapi import (
     APIRouter,
     HTTPException,
@@ -17,7 +12,11 @@ from sqlalchemy.orm import Session
 
 from app.database.db import get_db
 
-from app.schemas.photo import ImageModel, ImageModelsResponse, ImageWithCommentModelsResponse
+from app.schemas.photo import (
+    ImageModel,
+    ImageModelsResponse,
+    ImageWithCommentModelsResponse,
+)
 from app.repository import photo as repository_photo
 from app.repository.users import User
 from app.services.auth import auth_service
@@ -36,6 +35,7 @@ access_delete = RoleChecker([Role.admin, Role.user])
 @router.get("/my_photos", response_model=List[ImageWithCommentModelsResponse],
              dependencies=[Depends(access_get)]
              )
+
 async def see_my_photos(
     skip: int = 0,
     limit: int = 25,
@@ -53,6 +53,7 @@ async def see_my_photos(
 @router.get("/by_id/{photo_id}", response_model=ImageModelsResponse, 
             dependencies=[Depends(access_get)]
             )
+
 async def see_one_photo(
     photo_id: int,
     db: Session = Depends(get_db),
@@ -66,10 +67,12 @@ async def see_one_photo(
     return photo
 
 
+
 @router.post("/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED,
               dependencies=[Depends(access_create)]
             )
 async def create_foto(
+
     title: str = Form(),
     description: str = Form(),
     tags: str = Form(None),

@@ -16,11 +16,6 @@ from app.schemas.photo import ImageModel
 from app.schemas.tags import ImageTagModel
 
 
-# async def get_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-#     return (
-#         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
-#     )
-
 
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
@@ -37,7 +32,15 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
     return photo
 
 
-async def create_photo(title: str, description: str, tags: str,  file: UploadFile, db: Session, current_user: User,) -> Image:
+
+async def create_photo(
+    title: str,
+    description: str,
+    tags: str,
+    file: UploadFile,
+    db: Session,
+    current_user: User,
+) -> Image:
     public_id = f"PhotoShake/{uuid4().hex}"
     config_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=public_id)
@@ -89,7 +92,7 @@ async def update_description(
 # додати роль
 async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
-    
+
     if photo:
         if photo.user_id == user.id:
             config_cloudinary()

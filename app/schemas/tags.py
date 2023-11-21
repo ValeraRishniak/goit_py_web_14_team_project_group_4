@@ -8,6 +8,5 @@ class ImageTagModel(BaseModel):
 class ImageTagResponse(ImageTagModel):
     id: int
 
-
     class Config:
         from_attributes = True

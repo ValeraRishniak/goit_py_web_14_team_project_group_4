@@ -169,3 +169,4 @@ async def delete_user(user_id: int, db: Session) -> None:
     except Exception as e:
         db.rollback()
         raise e
+
