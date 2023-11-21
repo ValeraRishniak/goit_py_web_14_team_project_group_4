@@ -197,6 +197,6 @@ async def remove_user(user_id: int, db: Session = Depends(get_db)):
     us = await repository_users.delete_user(user_id, db)
     if us is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_204_NO_CONTENT, detail="User successfully deleted"
         )
     return us
