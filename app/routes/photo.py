@@ -32,10 +32,11 @@ access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_delete = RoleChecker([Role.admin, Role.user])
 
 
-@router.get("/my_photos", response_model=List[ImageWithCommentModelsResponse],
-             dependencies=[Depends(access_get)]
-             )
-
+@router.get(
+    "/my_photos",
+    response_model=List[ImageWithCommentModelsResponse],
+    dependencies=[Depends(access_get)],
+)
 async def see_my_photos(
     skip: int = 0,
     limit: int = 25,
@@ -50,10 +51,11 @@ async def see_my_photos(
     return photos
 
 
-@router.get("/by_id/{photo_id}", response_model=ImageModelsResponse, 
-            dependencies=[Depends(access_get)]
-            )
-
+@router.get(
+    "/by_id/{photo_id}",
+    response_model=ImageModelsResponse,
+    dependencies=[Depends(access_get)],
+)
 async def see_one_photo(
     photo_id: int,
     db: Session = Depends(get_db),
@@ -67,12 +69,13 @@ async def see_one_photo(
     return photo
 
 
-
-@router.post("/new/", response_model=ImageModelsResponse, status_code=status.HTTP_201_CREATED,
-              dependencies=[Depends(access_create)]
-            )
-async def create_foto(
-
+@router.post(
+    "/new/",
+    response_model=ImageModelsResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(access_create)],
+)
+async def create_photo(
     title: str = Form(),
     description: str = Form(),
     tags: str = Form(None),
@@ -85,15 +88,22 @@ async def create_foto(
     )
 
 
-@router.put("/{photo_id}", response_model=ImageModelsResponse, 
-            dependencies=[Depends(access_update)])
+@router.put(
+    "/{photo_id}",
+    response_model=ImageModelsResponse,
+    dependencies=[Depends(access_update)],
+)
 async def update_description(
-    body: ImageModel,
     photo_id: int,
+    title: str = Form(None),
+    description: str = Form(None),
+    tags: str = Form(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
 ):
-    photo = await repository_photo.update_description(photo_id, body, current_user, db)
+    photo = await repository_photo.update_description(
+        photo_id, title, description, tags, current_user, db
+    )
     if photo is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -102,8 +112,11 @@ async def update_description(
     return photo
 
 
-@router.delete("/{photo_id}", response_model=ImageModelsResponse, 
-               dependencies=[Depends(access_delete)])
+@router.delete(
+    "/{photo_id}",
+    response_model=ImageModelsResponse,
+    dependencies=[Depends(access_delete)],
+)
 async def remove_photo(
     photo_id: int,
     db: Session = Depends(get_db),
@@ -115,4 +128,3 @@ async def remove_photo(
             status_code=status.HTTP_404_NOT_FOUND, detail="Your photo not found"
         )
     return photo
-

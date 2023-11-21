@@ -7,11 +7,12 @@ from app.database.models import Image, ImageComment, User
 from app.schemas.comment import CommentBase
 
 
-async def create_comment(image_id: int, body: CommentBase, user: User, db: Session) -> ImageComment:
-
+async def create_comment(
+    image_id: int, body: CommentBase, user: User, db: Session
+) -> ImageComment:
     image = db.query(Image).filter(Image.id == image_id).first()
     comment = ImageComment(
-        comment_description=body.comment_description, user_id=user.id
+        comment_description=body.comment_description, user_id=user.id, image_id=image_id
     )
     db.add(comment)
     db.commit()
@@ -24,9 +25,9 @@ async def create_comment(image_id: int, body: CommentBase, user: User, db: Sessi
     return [comment]
 
 
-
-async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: User) -> ImageComment | None:
-
+async def edit_comment(
+    comment_id: int, body: CommentBase, db: Session, user: User
+) -> ImageComment | None:
     comment = db.query(ImageComment).filter(ImageComment.id == comment_id).first()
     if comment:
         # додати перевірку ролей
@@ -56,8 +57,16 @@ async def show_single_comment(
     )
 
 
-async def show_my_comments(user_id: int, image_id: int, db: Session) -> List[ImageComment] | None:
-    return db.query(ImageComment).filter(and_(ImageComment.image_id == image_id, ImageComment.user_id == user_id)).all()
+async def show_my_comments(
+    user_id: int, image_id: int, db: Session
+) -> List[ImageComment] | None:
+    return (
+        db.query(ImageComment)
+        .filter(
+            and_(ImageComment.image_id == image_id, ImageComment.user_id == user_id)
+        )
+        .all()
+    )
 
 
 async def show_user_photo_comments(
