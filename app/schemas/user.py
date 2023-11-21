@@ -33,7 +33,7 @@ class UserProfileModel(BaseModel):
     username: str 
     email: EmailStr
     avatar: Optional[str]
-    foto_count: Optional[int]
+    photo_count: Optional[int]
     comment_count: Optional[int]
     rates_count: Optional[int]
     is_active: Optional[bool]
