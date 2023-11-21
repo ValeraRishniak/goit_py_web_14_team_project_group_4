@@ -1,10 +1,7 @@
 from typing import List
 import cloudinary
 import cloudinary.uploader
-import shutil
 
-from app.database.models import CropMode, BGColor
-from app.conf.config import config_cloudinary
 
 from fastapi_limiter.depends import RateLimiter
 from fastapi import (
@@ -24,9 +21,13 @@ from app.schemas.photo import ImageModel, ImageModelsResponse, ImageWithCommentM
 from app.repository import photo as repository_photo
 from app.repository.users import User
 from app.services.auth import auth_service
+from app.services.roles import RoleChecker
+from app.database.models import Role
 
 
 router = APIRouter(prefix="/photos", tags=["photos"])
+
+ALLOWED_ROLE = RoleChecker([Role.admin, Role.user])
 
 
 @router.get("/my_photos", response_model=List[ImageWithCommentModelsResponse])
@@ -74,7 +75,7 @@ async def create_foto(
     )
 
 
-@router.put("/{photo_id}", response_model=ImageModelsResponse)
+@router.put("/{photo_id}", response_model=ImageModelsResponse, dependencies=[Depends(ALLOWED_ROLE)])
 async def update_description(
     body: ImageModel,
     photo_id: int,
@@ -90,7 +91,7 @@ async def update_description(
     return photo
 
 
-@router.delete("/{photo_id}", response_model=ImageModelsResponse)
+@router.delete("/{photo_id}", response_model=ImageModelsResponse, dependencies=[Depends(ALLOWED_ROLE)])
 async def remove_photo(
     photo_id: int,
     db: Session = Depends(get_db),

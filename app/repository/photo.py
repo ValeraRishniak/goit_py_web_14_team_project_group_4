@@ -24,15 +24,8 @@ from app.schemas.tags import ImageTagModel
 
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
     return (
-        db.query(Image).offset(skip).limit(limit).filter(Image.user_id == user.id).all()
-    )
-''' непонятки із функцією яка із них робоча
-async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
-    return (
         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
-'''
-
 
 
 async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
