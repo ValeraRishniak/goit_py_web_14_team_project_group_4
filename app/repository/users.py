@@ -109,6 +109,7 @@ async def get_users(skip: int, limit: int, db: Session) -> list[User]:
 
 async def delete_user(user_id : int, db: Session) -> None:
       user = db.query(User).filter(User.id == user_id).first()
-      db.delete(user)
-      db.commit()
-      return user
+      if user.role == Role.admin or user.role == Role.moderator:
+        db.delete(user)
+        db.commit()
+        return user
