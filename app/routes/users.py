@@ -170,7 +170,6 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
 
 @router.patch(
     "/remove from ban/{email}/",
-    response_model=UserDb,
     dependencies=[Depends(access_admin)],
 )
 async def remove_from_ban(body: RequestEmail, db: Session = Depends(get_db)):
