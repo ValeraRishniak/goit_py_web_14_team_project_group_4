@@ -12,8 +12,7 @@ async def get_user_by_email(email: str, db: Session) -> User:
 
 
 async def get_me(user: User, db: Session):
-    user = db.query(User).filter(User.id == user.id).first()
-    return user
+    return db.query(User).filter(User.id == user.id).first()
 
 
 async def create_user(body: UserModel, db: Session) -> User:
@@ -40,11 +39,10 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
     db.commit()
 
 
-async def update_user_inform(email:str, 
-                             username:str|None, 
-                             password:str|None,
-                             db: Session) -> User:
-    user =  db.query(User).filter_by(email=email).first()
+async def update_user_inform(
+    email: str, username: str | None, password: str | None, db: Session
+) -> User:
+    user = db.query(User).filter_by(email=email).first()
     user.password = password
     user.username = username
     db.commit()
@@ -67,7 +65,7 @@ async def update_avatar(email, url: str, db: Session) -> User:
 async def get_users(skip: int, limit: int, db: Session) -> List[User]:
     """
     The get_users function returns a list of users from the database.
-    
+
     :param skip: int: Skip the first n records in the database
     :param limit: int: Limit the number of results returned
     :param db: Session: Pass the database session to the function
@@ -81,7 +79,7 @@ async def get_user_profile(username: str, db: Session) -> User:
     The get_user_profile function returns a UserProfileModel object containing the user's username, email,
     avatar, created_at date and time (in UTC), is_active status (True or False),
     foto count, comment count and rates count.
-    
+
     :param username: str: Get the user profile of a specific user
     :param db: Session: Access the database
     :return: A userprofilemodel object
@@ -89,8 +87,9 @@ async def get_user_profile(username: str, db: Session) -> User:
     user = db.query(User).filter(User.username == username).first()
     if user:
         foto_count = db.query(Image).filter(Image.user_id == user.id).count()
-        comment_count = db.query(ImageComment).filter(
-            ImageComment.user_id == user.id).count()
+        comment_count = (
+            db.query(ImageComment).filter(ImageComment.user_id == user.id).count()
+        )
         user_profile = UserProfileModel(
             username=user.username,
             email=user.email,
@@ -101,11 +100,9 @@ async def get_user_profile(username: str, db: Session) -> User:
             comment_count=comment_count,
         )
         return user_profile
-    return None
 
 
 async def make_user_role(email: str, role: Role, db: Session) -> None:
-
     """
     The make_user_role function takes in an email and a role, and then updates the user's role to that new one.
     Args:
@@ -122,15 +119,13 @@ async def make_user_role(email: str, role: Role, db: Session) -> None:
     db.commit()
 
 
-'''
+"""
                             BAN 
 If you haven't been banned, you haven't been in the garden of chat Bizarre :)
-'''
-
+"""
 
 
 async def ban_user(email: str, db: Session) -> None:
-
     """
     The ban_user function takes in an email and a database session.
     It then finds the user with that email, sets their is_active field to False,
@@ -169,4 +164,3 @@ async def delete_user(user_id: int, db: Session) -> None:
     except Exception as e:
         db.rollback()
         raise e
-

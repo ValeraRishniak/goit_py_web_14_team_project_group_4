@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from typing import List
 from datetime import datetime
+from pydantic_core import ValidationError
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from fastapi import UploadFile
@@ -14,7 +15,6 @@ from app.database.models import User, Image
 from app.repository.tags import create_tag
 from app.schemas.photo import ImageModel
 from app.schemas.tags import ImageTagModel
-
 
 
 async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[Image]:
@@ -30,7 +30,6 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
         .first()
     )
     return photo
-
 
 
 async def create_photo(
@@ -64,8 +63,11 @@ async def create_photo(
         tags = tags.split(",")
         for tag in tags:
             tag.strip()
-            current_tag = ImageTagModel(tag_name=tag)
-            result.append(current_tag)
+            try:
+                current_tag = ImageTagModel(tag_name=tag)
+                result.append(current_tag)
+            except ValidationError as e:
+                print(e)
         image.tags = await create_tag(result, db)
 
     db.add(image)
@@ -77,14 +79,21 @@ async def create_photo(
 
 # додати роль
 async def update_description(
-    photo_id: int, body: ImageModel, user: User, db: Session
+    photo_id: int, title: str, description: str, tags: str, user: User, db: Session
 ) -> Image | None:
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:
         if photo.user_id == user.id:
-            photo.title = body.title
-            photo.description = body.description
-            photo.tags = body.tags
+            photo.title = title
+            photo.description = description
+            if tags:
+                result = []
+                tags = tags.split(",")
+                for tag in tags:
+                    tag.strip()
+                    current_tag = ImageTagModel(tag_name=tag)
+                    result.append(current_tag)
+                photo.tags = await create_tag(result, db)
             db.commit()
     return photo
 
