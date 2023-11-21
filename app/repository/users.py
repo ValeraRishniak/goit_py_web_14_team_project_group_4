@@ -59,12 +59,21 @@ async def update_avatar(email, url: str, db: Session) -> User:
     db.commit()
     return user
 
+async def update_user_inform(email:str, 
+                             username:str|None, 
+                            password:str|None,
+                             db: Session) -> User:
+    user =  db.query(User).filter_by(email=email).first()
+    user.password = password
+    user.username = username
+    db.commit()
+    return user
 
 async def make_user_role(email: str, role: Role, db: Session) -> None:
     user = await get_user_by_email(email, db)
     user.role = role
     try:
-        await db.commit()
+       db.commit()
     except Exception as e:
         db.rollback()
         raise e
@@ -97,3 +106,9 @@ async def razban_user(email: str, db: Session) -> None:
     
 async def get_users(skip: int, limit: int, db: Session) -> list[User]:
     return db.query(User).offset(skip).limit(limit).all()
+
+async def delete_user(user_id : int, db: Session) -> None:
+      user = db.query(User).filter(User.id == user_id).first()
+      db.delete(user)
+      db.commit()
+      return user

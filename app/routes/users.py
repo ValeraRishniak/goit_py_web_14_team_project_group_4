@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
+from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException, Request, BackgroundTasks
 from sqlalchemy.orm import Session
 import cloudinary
 import cloudinary.uploader
@@ -12,6 +12,7 @@ from app.conf.config import settings, init_async_redis
 from app.schemas.user import UserDb, UserResponse
 from app.services.roles import Admin_Moder, Admin
 from app.conf.config import config_cloudinary
+from app.services.emailtogo import send_email
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -41,11 +42,24 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     user = await repository_users.update_avatar(current_user.email, src_url, db)
     return user
 
+
+@router.patch('/update_all_inform_user', response_model=UserDb)
+async def update_all_inform_user( 
+                                 username: str| None,
+                                password: str|None, 
+                                 current_user: User = Depends(auth_service.get_current_user),
+                                 db: Session = Depends(get_db)):       
+    user = await repository_users.update_user_inform(current_user.email, 
+                                                     username, 
+                                                    password,  
+                                                     db)
+    return user
+
 @router.get("/all Users/", response_model=list[UserDb])
 async def read_all_users(skip: int = 0, limit: int = 25, db: Session = Depends(get_db)):
     return await repository_users.get_users(skip, limit, db)
 
-@router.patch("/asign_role/{role}",  dependencies=[Depends(Admin)] , response_model=UserDb)
+@router.patch("/asign_role/{role}",  dependencies=[Depends(Admin_Moder)] , response_model=UserDb)
 async def assign_role( email: str, role: Role, db: Session = Depends(get_db)): 
     user = await repository_users.get_user_by_email(email, db)
     if not user:
@@ -68,8 +82,8 @@ async def get_user_by_username( username: str, current_user: User = Depends(auth
 
 @router.get("/find_by_mail/{by_email}", response_model=UserDb)
 async def get_user_by_email( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)) -> dict | None:
-     urer  = await repository_users.get_user_by_email(email, db)
-     return urer 
+     user  = await repository_users.get_user_by_email(email, db)
+     return user 
  
 @router.patch("/ban", name="ban_user", dependencies=[Depends(Admin)],  response_model=UserDb)
 async def ban_user( email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
@@ -106,3 +120,11 @@ async def razban_user( email: str, current_user: User = Depends(auth_service.get
     else:
         raise HTTPException( status_code=status.HTTP_409_CONFLICT, detail='This email is already active')
 
+@router.delete("/{user_id}", dependencies=[Depends(Admin_Moder)], response_model=UserDb)
+async def remove_user(user_id: int, db: Session = Depends(get_db)):
+    us = await repository_users.delete_user(user_id, db)
+    if us is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    return us
