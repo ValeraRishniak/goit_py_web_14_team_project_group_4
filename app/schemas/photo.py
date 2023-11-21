@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel, Field
@@ -11,7 +11,7 @@ class ImageModel(BaseModel):
     description: str = Field(max_length=255)
     tags: List[ImageTagModel]
 
-    @validator("tags")
+    @field_validator("tags")
     def validate_tags(cls, v):
         if len(v or []) > 5:
             raise ValueError("Too many tags. Maximum 5 tags allowed.")
