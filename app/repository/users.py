@@ -90,18 +90,18 @@ async def ban_user(email: str, db: Session) -> None:
     user = await get_user_by_email(email, db)
     user.is_active = False
     try:
-        await db.commit()
+          db.commit()
     except Exception as e:
-        await db.rollback()
+        db.rollback()
         raise e
 
 async def razban_user(email: str, db: Session) -> None:
     user = await get_user_by_email(email, db)
     user.is_active = True
     try:
-        await db.commit()
+         db.commit()
     except Exception as e:
-        await db.rollback()
+        db.rollback()
         raise e
     
 async def get_users(skip: int, limit: int, db: Session) -> list[User]:

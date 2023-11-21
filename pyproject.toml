@@ -22,6 +22,7 @@ pydantic = "^2.5.0"
 cloudinary-upload = "^0.0.4"
 cloudinary = "^1.36.0"
 qrcode = {extras = ["pil"], version = "^7.4.2"}
+magicmock = "^0.3"
 
 
 [tool.poetry.group.dev.dependencies]
