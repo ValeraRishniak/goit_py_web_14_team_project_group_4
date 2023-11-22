@@ -19,6 +19,7 @@ async def create_comment(
     :param db: Session: Create a database session
     :return: A list of comments
     """
+    
     image = db.query(Image).filter(Image.id == image_id).first()
     comment = ImageComment(
         comment_description=body.comment_description, user_id=user.id, image_id=image_id
@@ -46,9 +47,9 @@ async def edit_comment(
     :param user: User: Check if the user is authorized to edit the comment
     :return: The updated comment or none if the comment with the specified id was not found
     """
+
     comment = db.query(ImageComment).filter(ImageComment.id == comment_id).first()
     if comment:
-        # додати перевірку ролей
         if comment.user_id == user.id:
             comment.comment_description = body.comment_description
             comment.updated_at = func.now()
@@ -66,8 +67,9 @@ async def delete_comment(comment_id: int, db: Session, user: User) -> None:
     :param user: User: Check if the user is authorized to delete a comment
     :return: A comment
     """
+
     comment = db.query(ImageComment).filter(ImageComment.id == comment_id).first()
-    if comment:  # додати перевірку ролей
+    if comment:
         db.delete(comment)
         db.commit()
     return comment
@@ -84,6 +86,7 @@ async def show_single_comment(
     :param user: User: Check if the user is authorized to view the comment
     :return: An ImageComment object or none
     """
+
     return (
         db.query(ImageComment)
         .filter(and_(ImageComment.id == comment_id, ImageComment.user_id == user.id))
@@ -102,6 +105,7 @@ async def show_my_comments(
     :param db: Session: Pass in the database session, which is used to query the database
     :return: A list of ImageComment objects
     """
+
     return (
         db.query(ImageComment)
         .filter(
@@ -122,6 +126,7 @@ async def show_user_photo_comments(
     :param db: Session: Connect to the database
     :return: A list of ImageComment objects
     """
+
     return (
         db.query(ImageComment)
         .filter(

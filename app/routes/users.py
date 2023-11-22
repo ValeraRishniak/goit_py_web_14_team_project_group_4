@@ -28,6 +28,15 @@ async def read_users_me(
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The read_users_me function returns the current user's information.
+    
+    
+    :param current_user: User: Get the current user from the database
+    :param db: Session: Pass the database session to the repository
+    :param : Get the current user
+    :return: A user object
+    """
     user = await repository_users.get_me(current_user, db)
     return user
 
@@ -43,6 +52,19 @@ async def update_all_inform_user(
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The update_all_inform_user function updates the username and password of a user.
+        Args:
+            username (str): The new username for the user.
+            password (str): The new password for the user.
+    
+    :param username: str | None: Update the username of a user
+    :param password: str | None: Update the password of a user
+    :param current_user: User: Get the current user information
+    :param db: Session: Get the database session
+    :param : Get the current user information
+    :return: The user object
+    """
     user = await repository_users.update_user_inform(
         current_user.email, username, password, db
     )
@@ -57,6 +79,20 @@ async def update_avatar_user(
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The update_avatar_user function updates the avatar of a user.
+        Args:
+            file (UploadFile): The image to be uploaded.
+            current_user (User): The user whose avatar is being updated.
+            db (Session): A database session object for interacting with the database.
+    
+    :param file: UploadFile: Get the file from the request
+    :param current_user: User: Get the current user's email and id
+    :param db: Session: Access the database
+    :param : Get the current user from the database
+    :return: The user object with the new avatar url
+    """
+    
     config_cloudinary()
 
     r = cloudinary.uploader.upload(
@@ -86,6 +122,7 @@ async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(g
     :param db: Session: Pass the database connection to the function
     :return: A list of users
     """
+
     users = await repository_users.get_users(skip, limit, db)
     return users
 
@@ -109,6 +146,7 @@ async def read_user_profile_by_username(
     :param current_user: User: Get the current user's information
     :return: A userprofile object
     """
+
     user_profile = await repository_users.get_user_profile(username, db)
     if user_profile is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
@@ -128,6 +166,7 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
     :param db: Session: Access the database
     :return: A dictionary with a message key
     """
+
     user = await repository_users.get_user_by_email(body.email, db)
     if not user:
         raise HTTPException(
@@ -144,15 +183,16 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
 async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
     """
     The ban_user_by_email function takes a user's email address and bans the user from accessing the API.
-        If the email is not found in our database, an HTTPException is raised with status code 401 (Unauthorized) and
-        detail message &quot;Invalid Email&quot;. If the user has already been banned, an HTTPException is raised with status code 409
-        (Conflict) and detail message &quot;User Already Not Active&quot;. Otherwise, if no exceptions are thrown, we return a JSON object
-        containing key-value pair {&quot;message&quot;: USER_NOT_ACTIVE}.
-
+            If the email is not found in our database, an HTTPException is raised with status code 401 (Unauthorized) and
+            detail message &amp;quot;Invalid Email&amp;quot;. If the user has already been banned, an HTTPException is raised with status code 409
+            (Conflict) and detail message &amp;quot;User Already Not Active&amp;quot;. Otherwise, if no exceptions are thrown, we return a JSON object
+            containing key-value pair {&amp;quot;message&amp;quot;
+    
     :param body: RequestEmail: Get the email from the request body
     :param db: Session: Get the database session
-    :return: A dictionary with a message
+    :return: A dict with the message
     """
+
     user = await repository_users.get_user_by_email(body.email, db)
 
     if not user:
@@ -173,6 +213,15 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
     dependencies=[Depends(access_admin)],
 )
 async def remove_from_ban(body: RequestEmail, db: Session = Depends(get_db)):
+    """
+    The remove_from_ban function removes a user from the ban list.
+        The function takes an email as input and returns a message if successful.
+    
+    :param body: RequestEmail: Get the email from the request body
+    :param db: Session: Get the database session
+    :return: A dict with message
+    """
+
     user = await repository_users.get_user_by_email(body.email, db)
     if not user:
         raise HTTPException(
@@ -194,6 +243,17 @@ async def remove_from_ban(body: RequestEmail, db: Session = Depends(get_db)):
     dependencies=[Depends(access_admin)],
 )
 async def remove_user(user_id: int, db: Session = Depends(get_db)):
+    """
+    The remove_user function deletes a user from the database.
+        Args:
+            user_id (int): The id of the user to be deleted.
+            db (Session, optional): SQLAlchemy Session. Defaults to Depends(get_db).
+    
+    :param user_id: int: Identify the user to be deleted
+    :param db: Session: Pass the database connection to the function
+    :return: A user object
+    """
+
     us = await repository_users.delete_user(user_id, db)
     if us is None:
         raise HTTPException(

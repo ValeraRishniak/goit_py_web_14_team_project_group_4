@@ -15,6 +15,7 @@ async def get_user_by_email(email: str, db: Session) -> User:
     :param db: Session: Pass the database session to the function
     :return: A user object
     """
+    
     return db.query(User).filter(User.email == email).first()
 
 
@@ -26,6 +27,7 @@ async def get_me(user: User, db: Session):
     :param db: Session: Access the database
     :return: A user object
     """
+
     return db.query(User).filter(User.id == user.id).first()
 
 
@@ -37,6 +39,7 @@ async def create_user(body: UserModel, db: Session) -> User:
     :param db: Session: Access the database
     :return: A user object
     """
+
     avatar = None
     try:
         g = Gravatar(body.email)
@@ -64,6 +67,7 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
     :param db: Session: Commit the changes to the database
     :return: None
     """
+
     user.refresh_token = token
     db.commit()
 
@@ -80,6 +84,7 @@ async def update_user_inform(
     :param db: Session: Pass the database session to the function
     :return: A user object
     """
+
     user = db.query(User).filter_by(email=email).first()
     user.password = password
     user.username = username
@@ -95,6 +100,7 @@ async def confirmed_email(email: str, db: Session) -> None:
     :param db: Session: Pass the database session to the function
     :return: None
     """
+
     user = await get_user_by_email(email, db)
     user.confirmed = True
     db.commit()
@@ -109,6 +115,7 @@ async def update_avatar(email, url: str, db: Session) -> User:
     :param db: Session: Pass the database session to the function
     :return: The user object
     """
+
     user = await get_user_by_email(email, db)
     user.avatar = url
     db.commit()
@@ -124,6 +131,7 @@ async def get_users(skip: int, limit: int, db: Session) -> List[User]:
     :param db: Session: Pass the database session to the function
     :return: A list of users
     """
+
     return db.query(User).offset(skip).limit(limit).all()
 
 
@@ -135,6 +143,7 @@ async def get_user_profile(username: str, db: Session) -> User:
     :param db: Session: Pass in the database session to the function
     :return: A user object
     """
+
     user = db.query(User).filter(User.username == username).first()
     if user:
         photo_count = db.query(Image).filter(Image.user_id == user.id).count()
@@ -156,13 +165,15 @@ async def get_user_profile(username: str, db: Session) -> User:
 
 async def make_user_role(email: str, role: Role, db: Session) -> None:
     """
-    The make_user_role function takes in an email and a role, and then updates the user's role to that new one.
+    The make_user_role function takes an email and a role, then finds the user with that email in the database.
+    It then sets that user's role to be equal to the given role.
 
     :param email: str: Get the user by email
-    :param role: UserRoleEnum: Set the role of the user
+    :param role: Role: Specify the role of the user
     :param db: Session: Pass the database session to the function
     :return: None
     """
+
     user = await get_user_by_email(email, db)
     user.role = role
     db.commit()
@@ -176,14 +187,14 @@ If you haven't been banned, you haven't been in the garden of chat Bizarre :)
 
 async def ban_user(email: str, db: Session) -> None:
     """
-    The ban_user function takes in an email and a database session.
-    It then finds the user with that email, sets their is_active field to False,
-    and commits the change to the database.
-
-    :param email: str: Identify the user to be banned
-    :param db: Session: Pass in the database session
-    :return: None, because we don't need to return anything
+    The ban_user function takes an email address and a database connection,
+    and sets the user's is_active flag to False.
+        
+    :param email: str: Specify the email of the user to be banned
+    :param db: Session: Pass the database session to the function
+    :return: None
     """
+    
     user = await get_user_by_email(email, db)
     user.is_active = False
     db.commit()
@@ -197,6 +208,7 @@ async def remove_from_ban(email: str, db: Session) -> None:
     :param db: Session: Pass in the database session
     :return: None
     """
+
     user = await get_user_by_email(email, db)
     user.is_active = True
     try:
@@ -216,6 +228,7 @@ async def activate_user(email: str, db: Session) -> None:
     :param db: Session: Create a database session
     :return: None
     """
+
     user = await get_user_by_email(email, db)
     user.is_active = True
     db.commit()
@@ -229,6 +242,7 @@ async def delete_user(user_id: int, db: Session) -> None:
     :param db: Session: Pass in the database session
     :return: None
     """
+
     user = db.query(User).filter(User.id == user_id).first()
     try:
         db.delete(user)

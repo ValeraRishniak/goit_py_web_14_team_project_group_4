@@ -3,6 +3,14 @@ from pydantic_settings import BaseSettings
 
 
 def config_cloudinary():
+    """
+    The config_cloudinary function is used to configure the cloudinary library with the
+        credentials stored in settings.py. This function should be called before any other
+        cloudinary functions are called.
+    
+    :return: A dict with the cloudinary configuration
+    """
+    
     cloudinary.config(
         cloud_name=settings.cloudinary_name,
         api_key=settings.cloudinary_api_key,

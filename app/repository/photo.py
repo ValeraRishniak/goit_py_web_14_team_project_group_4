@@ -26,6 +26,7 @@ async def get_my_photos(skip: int, limit: int, user: User, db: Session) -> List[
     :param db: Session: Access the database
     :return: A list of images that are owned by the user
     """
+    
     return (
         db.query(Image).filter(Image.user_id == user.id).offset(skip).limit(limit).all()
     )
@@ -40,6 +41,7 @@ async def get_photo_by_id(photo_id: int, user: User, db: Session) -> Image:
     :param db: Session: Pass the database session to the function
     :return: A photo by its id
     """
+
     photo = (
         db.query(Image)
         .filter(and_(Image.user_id == user.id, Image.id == photo_id))
@@ -68,6 +70,7 @@ async def create_photo(
     :param : Create a new tag in the database
     :return: A image object
     """
+
     public_id = f"PhotoShake/{uuid4().hex}"
     config_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=public_id)
@@ -105,7 +108,6 @@ async def create_photo(
     return image
 
 
-# додати роль
 async def update_description(
     photo_id: int, title: str, description: str, tags: str, user: User, db: Session
 ) -> Image | None:
@@ -120,6 +122,7 @@ async def update_description(
     :param db: Session: Access the database
     :return: The photo object if the update was successful, none otherwise
     """
+
     photo = db.query(Image).filter(Image.id == photo_id).first()
     if photo:
         if photo.user_id == user.id:
@@ -137,7 +140,6 @@ async def update_description(
     return photo
 
 
-# додати роль
 async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     """
     The remove_photo function removes a photo from the database and cloudinary.
@@ -147,6 +149,7 @@ async def remove_photo(photo_id: int, user: User, db: Session) -> Image | None:
     :param db: Session: Access the database
     :return: The photo object that was deleted
     """
+
     photo = db.query(Image).filter(Image.id == photo_id).first()
 
     if photo:

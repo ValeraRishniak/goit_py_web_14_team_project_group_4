@@ -23,6 +23,7 @@ async def transform_method(
     :param db: Session: Access the database
     :return: The photo object with the new transform_url
     """
+    
     photo = (
         db.query(Image).filter(Image.user_id == user.id, Image.id == photo_id).first()
     )
@@ -114,6 +115,7 @@ async def show_qr(photo_id: int, user: User, db: Session) -> Image | None:
     :param db: Session: Pass the database session to the function
     :return: A buffer, which is a memory-only file
     """
+
     photo = (
         db.query(Image).filter(Image.user_id == user.id, Image.id == photo_id).first()
     )

@@ -24,8 +24,18 @@ conf = ConnectionConfig(
 async def send_email(email: EmailStr, username: str, host: str):
     """
     The send_email function sends an email to the user with a link to confirm their email address.
+        The function takes in three arguments:
+            -email: the user's email address, which is used as a unique identifier for each account.
+            -username: the username of the account that was just created.
+            -host: this is used in conjunction with FastMail's API to create a URL that will be sent 
+                via email and allow users to verify their accounts.
 
+    :param email: EmailStr: Validate the email address
+    :param username: str: Pass the username to the email template
+    :param host: str: Pass the hostname of the server where this app is running
+    :return: A coroutine object
     """
+
     try:
         token_verification = auth_service.create_email_token({"sub": email})
         message = MessageSchema(

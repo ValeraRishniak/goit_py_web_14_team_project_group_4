@@ -33,6 +33,16 @@ async def signup(
     request: Request,
     db: Session = Depends(get_db),
 ):
+    """
+    The signup function creates a new user in the database.
+    
+    :param body: UserModel: Get the user data from the request body
+    :param background_tasks: BackgroundTasks: Add tasks to the background task queue
+    :param request: Request: Get the base url of the server
+    :param db: Session: Get the database session
+    :param : Get the database session
+    :return: A dictionary with two keys: user and detail
+    """
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(
@@ -53,6 +63,13 @@ async def signup(
 async def login(
     body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
+    """
+    The login function is used to authenticate a user.
+    
+    :param body: OAuth2PasswordRequestForm: Get the username and password from the request body
+    :param db: Session: Pass the database session to the function
+    :return: A dictionary with the access token, refresh token and a bearer type
+    """
     user = await repository_users.get_user_by_email(body.username, db)
     if user is None:
         raise HTTPException(
@@ -82,6 +99,16 @@ async def refresh_token(
     credentials: HTTPAuthorizationCredentials = Security(security),
     db: Session = Depends(get_db),
 ):
+    """
+    The refresh_token function is used to refresh the access token.
+        The function takes in a refresh token and returns an access_token, 
+        a new refresh_token, and the type of token (bearer).
+    
+    :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
+    :param db: Session: Pass the database session to the function
+    :param : Get the user's email and the db parameter is used to update the refresh token in database
+    :return: A dict with the keys access_token, refresh_token and token_type
+    """
     token = credentials.credentials
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
@@ -108,6 +135,20 @@ async def request_email(
     request: Request,
     db: Session = Depends(get_db),
 ):
+    """
+    The request_email function is used to send an email to the user with a link
+    to confirm their account. The function takes in the body of the request, which
+    contains only one field: email. It then uses this information to query for a 
+    user in our database and if it finds one, sends them an email with a confirmation 
+    link.
+    
+    :param body: RequestEmail: Get the email from the request body
+    :param background_tasks: BackgroundTasks: Add a task to the background_tasks queue
+    :param request: Request: Get the base url of the application
+    :param db: Session: Get the database session
+    :param : Get the user's email address
+    :return: A dictionary {'message': 'check your email for confirmation'}
+    """
     user = await repository_users.get_user_by_email(body.email, db)
     if user.confirmed:
         return {"message": "Your email is already confirmed"}
@@ -120,6 +161,20 @@ async def request_email(
 
 @router.get("/confirmed_email/{token}")
 async def confirmed_email(token: str, db: Session = Depends(get_db)):
+    """
+    The confirmed_email function is used to confirm a user's email address.
+        It takes the token from the URL and uses it to get the user's email address.
+        Then, it checks if that user exists in our database, and if they do not exist, 
+        an HTTP 400 error is returned with a detail message of &quot;Verification error&quot;.
+         If they do exist but their confirmed field is already set to True (meaning their 
+         email has already been confirmed), then we return a JSON response saying so. 
+         Otherwise, we call our repository_users function confirmed_email() which
+    
+    :param token: str: Get the token from the url
+    :param db: Session: Get the database session
+    :return: A dictionary with the message &quot;email confirmed&quot;
+    """
+    
     email = await auth_service.get_email_from_token(token)
     user = await repository_users.get_user_by_email(email, db)
     if user is None:

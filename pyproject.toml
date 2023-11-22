@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "goit_py_web_14_team_project_group_4"
+name = "Snake SHAKE team"
 version = "0.1.0"
-description = "Photo SHAKE app"
+description = "Photo SHAKE App"
 authors = ["Team lead - Валерій Рішняк, Scrum master - Viktoriia, Developers - Anton Mescheryakov, Владислав Бондаренко"]
 readme = "README.md"
 
@@ -22,6 +22,7 @@ pydantic = "^2.5.0"
 cloudinary-upload = "^0.0.4"
 cloudinary = "^1.36.0"
 qrcode = {extras = ["pil"], version = "^7.4.2"}
+magicmock = "^0.3"
 
 
 [tool.poetry.group.dev.dependencies]

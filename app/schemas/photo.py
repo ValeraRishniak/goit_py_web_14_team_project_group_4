@@ -13,6 +13,15 @@ class ImageModel(BaseModel):
 
     @field_validator("tags")
     def validate_tags(cls, v):
+        """
+        The validate_tags function is a class method that validates the tags field.
+        It ensures that no more than 5 tags are added to a post.
+        
+        :param cls: Pass the class object to the function
+        :param v: Pass the value of the tags field
+        :return: The value of v, which is a list
+        """
+        
         if len(v or []) > 5:
             raise ValueError("Too many tags. Maximum 5 tags allowed.")
         return v
