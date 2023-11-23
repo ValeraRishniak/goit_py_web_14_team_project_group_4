@@ -179,12 +179,6 @@ async def make_user_role(email: str, role: Role, db: Session) -> None:
     db.commit()
 
 
-"""
-                            BAN 
-If you haven't been banned, you haven't been in the garden of chat Bizarre :)
-"""
-
-
 async def ban_user(email: str, db: Session) -> None:
     """
     The ban_user function takes an email address and a database connection,

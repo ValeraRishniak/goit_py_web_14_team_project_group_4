@@ -34,7 +34,6 @@ async def read_users_me(
     
     :param current_user: User: Get the current user from the database
     :param db: Session: Pass the database session to the repository
-    :param : Get the current user
     :return: A user object
     """
     user = await repository_users.get_me(current_user, db)
@@ -62,7 +61,6 @@ async def update_all_inform_user(
     :param password: str | None: Update the password of a user
     :param current_user: User: Get the current user information
     :param db: Session: Get the database session
-    :param : Get the current user information
     :return: The user object
     """
     user = await repository_users.update_user_inform(
@@ -89,7 +87,6 @@ async def update_avatar_user(
     :param file: UploadFile: Get the file from the request
     :param current_user: User: Get the current user's email and id
     :param db: Session: Access the database
-    :param : Get the current user from the database
     :return: The user object with the new avatar url
     """
     

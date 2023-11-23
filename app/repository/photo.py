@@ -67,7 +67,6 @@ async def create_photo(
     :param file: UploadFile: Pass the image file to the cloudinary uploader
     :param db: Session: Pass the database session to the function
     :param current_user: User: Get the current user who is logged in
-    :param : Create a new tag in the database
     :return: A image object
     """
 

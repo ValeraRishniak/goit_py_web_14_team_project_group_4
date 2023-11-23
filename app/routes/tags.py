@@ -26,7 +26,6 @@ async def read_tags(
     :param limit: int: Limit the number of tags returned
     :param current_user: User: Get the current user from the request
     :param db: Session: Pass the database session to the repository layer
-    :param : Get the current user
     :return: A list of tags
     """
 
@@ -45,7 +44,6 @@ async def read_tag(
     :param tag_id: int: Get the tag id from the url
     :param current_user: User: Get the current user from the database
     :param db: Session: Pass the database session to the repository layer
-    :param : Get the current user from the database and pass it to the function
     :return: A tag object
     """
 
@@ -72,7 +70,6 @@ async def create_tag(
     :param tags: List[ImageTagModel]: Pass in a list of tags to create
     :param current_user: User: Get the user that is currently logged in
     :param db: Session: Pass the database session to the repository layer
-    :param : Get the current user and the db parameter is used to get a database session
     :return: A list of imagetagmodel objects
     """
 
@@ -97,7 +94,6 @@ async def update_tag(
     :param tag_id: int: Identify the tag to be updated
     :param current_user: User: Get the current user from the auth_service
     :param db: Session: Pass the database session to the repository layer
-    :param : Pass the body of the request to update_tag
     :return: A tag object
     """
 
@@ -125,7 +121,6 @@ async def remove_tag(
     :param tag_id: int: Specify the tag that will be removed
     :param current_user: User: Check if the user is authenticated
     :param db: Session: Pass the database session to the repository layer
-    :param : Get the tag id from the url
     :return: The removed tag
     """
     

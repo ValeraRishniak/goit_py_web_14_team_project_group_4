@@ -1,10 +1,10 @@
-.. Photo SHAKE App based on Rest API documentation master file, created by
+.. Photo SHAKE App documentation master file, created by
    sphinx-quickstart on Wed Nov 22 09:02:38 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Photo SHAKE App based on Rest API's documentation!
-=============================================================
+Welcome to Photo SHAKE App documentation!
+=========================================
 
 .. toctree::
    :maxdepth: 2

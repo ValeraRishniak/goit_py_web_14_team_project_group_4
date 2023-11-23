@@ -27,8 +27,7 @@ async def send_email(email: EmailStr, username: str, host: str):
         The function takes in three arguments:
             -email: the user's email address, which is used as a unique identifier for each account.
             -username: the username of the account that was just created.
-            -host: this is used in conjunction with FastMail's API to create a URL that will be sent 
-                via email and allow users to verify their accounts.
+            -host: this is used in conjunction with FastMail's API to create a URL that will be sent via email and allow users to verify their accounts.
 
     :param email: EmailStr: Validate the email address
     :param username: str: Pass the username to the email template

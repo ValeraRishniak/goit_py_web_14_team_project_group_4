@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Welcome to Photo SHAKE App based on Rest API’s documentation! &#8212; Photo SHAKE App based on Rest API  documentation</title>
+    <title>Welcome to Photo SHAKE App documentation! &#8212; Photo SHAKE App  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css?v=601dbdee" />
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
@@ -23,8 +23,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Photo SHAKE App based on Rest API  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Welcome to Photo SHAKE App based on Rest API’s documentation!</a></li> 
+        <li class="nav-item nav-item-0"><a href="#">Photo SHAKE App  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to Photo SHAKE App documentation!</a></li> 
       </ul>
     </div>  
 
@@ -33,8 +33,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="welcome-to-photo-shake-app-based-on-rest-api-s-documentation">
-<h1>Welcome to Photo SHAKE App based on Rest API’s documentation!<a class="headerlink" href="#welcome-to-photo-shake-app-based-on-rest-api-s-documentation" title="Link to this heading">¶</a></h1>
+  <section id="welcome-to-photo-shake-app-documentation">
+<h1>Welcome to Photo SHAKE App documentation!<a class="headerlink" href="#welcome-to-photo-shake-app-documentation" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -212,9 +212,10 @@ It will also create the database tables if they don’t exist yet.</p>
 <li><p><strong>current_user</strong> – User: Get the current user who is logged in</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A image object</p>
+</dd>
 </dl>
-<p>:param : Create a new tag in the database
-:return: A image object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -756,9 +757,10 @@ a new refresh_token, and the type of token (bearer).</p>
 <li><p><strong>db</strong> – Session: Pass the database session to the function</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict with the keys access_token, refresh_token and token_type</p>
+</dd>
 </dl>
-<p>:param : Get the user’s email and the db parameter is used to update the refresh token in database
-:return: A dict with the keys access_token, refresh_token and token_type</p>
 </dd></dl>
 
 <dl class="py function">
@@ -778,9 +780,10 @@ link.</p>
 <li><p><strong>db</strong> – Session: Get the database session</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary {‘message’: ‘check your email for confirmation’}</p>
+</dd>
 </dl>
-<p>:param : Get the user’s email address
-:return: A dictionary {‘message’: ‘check your email for confirmation’}</p>
 </dd></dl>
 
 <dl class="py function">
@@ -796,9 +799,10 @@ link.</p>
 <li><p><strong>db</strong> – Session: Get the database session</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with two keys: user and detail</p>
+</dd>
 </dl>
-<p>:param : Get the database session
-:return: A dictionary with two keys: user and detail</p>
 </dd></dl>
 
 </section>
@@ -824,9 +828,10 @@ current_user (User, optional): User object for the currently logged in user. Def
 <li><p><strong>current_user</strong> – User: Get the user_id of the current user</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of comments</p>
+</dd>
 </dl>
-<p>:param : Get the user_id of the current user
-:return: A list of comments</p>
 </dd></dl>
 
 <dl class="py function">
@@ -849,12 +854,12 @@ current_user (User, optional): User object for the currently logged in user. Def
 <li><p><strong>user_id</strong> – int: Get the user_id of the user who commented on a photo</p></li>
 <li><p><strong>image_id</strong> – int: Identify the photo that the comment is associated with</p></li>
 <li><p><strong>db</strong> – Session: Get the database session</p></li>
-<li><p><strong>current_user</strong> – User: Get the current user</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of comments</p>
+</dd>
 </dl>
-<p>:param : Get the user id of the photo owner
-:return: A list of comments</p>
 </dd></dl>
 
 <dl class="py function">
@@ -873,9 +878,10 @@ current_user (User, optional): User object for the currently logged in user. Def
 <li><p><strong>current_user</strong> – User: Get the user who is currently logged in</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A comment object</p>
+</dd>
 </dl>
-<p>:param : Get the image_id from the url and use it to create a comment for that specific image
-:return: A comment object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -894,9 +900,10 @@ and returns a dictionary containing information about that comment.</p>
 <li><p><strong>current_user</strong> – User: Get the user who is making the request</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deleted comment</p>
+</dd>
 </dl>
-<p>:param : Get the comment id from the url
-:return: The deleted comment</p>
 </dd></dl>
 
 <dl class="py function">
@@ -916,9 +923,10 @@ It then calls the edit_comment function from repository/comment.py which returns
 <li><p><strong>current_user</strong> – User: Get the current user from the auth_service</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A commentbase object, which is a pydantic model</p>
+</dd>
 </dl>
-<p>:param : Get the comment_id from the url
-:return: A commentbase object, which is a pydantic model</p>
 </dd></dl>
 
 <dl class="py function">
@@ -938,9 +946,10 @@ Otherwise, the function returns that single Comment object.</p>
 <li><p><strong>current_user</strong> – User: Get the user who is currently logged in</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A comment object</p>
+</dd>
 </dl>
-<p>:param : Get the comment id from the url
-:return: A comment object</p>
 </dd></dl>
 
 </section>
@@ -965,9 +974,10 @@ It then uses the repository_photo module to create the photo.</p>
 <li><p><strong>current_user</strong> – User: Get the user that is currently logged in</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple of the photo object and a list of tag objects</p>
+</dd>
 </dl>
-<p>:param : Get the current user
-:return: A tuple of the photo object and a list of tag objects</p>
 </dd></dl>
 
 <dl class="py function">
@@ -990,9 +1000,10 @@ current_user (User, optional): The user currently logged in and making this requ
 <li><p><strong>current_user</strong> – User: Get the current user from the database</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A photo object</p>
+</dd>
 </dl>
-<p>:param : Get the photo id from the url
-:return: A photo object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1008,9 +1019,10 @@ current_user (User, optional): The user currently logged in and making this requ
 <li><p><strong>db</strong> – Session: Access the database</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of photos</p>
+</dd>
 </dl>
-<p>:param : Skip the first n photos
-:return: A list of photos</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1033,9 +1045,10 @@ current_user (User, optional): User object with user information from auth token
 <li><p><strong>current_user</strong> – User: Get the current user</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A photo object</p>
+</dd>
 </dl>
-<p>:param : Get the id of the photo you want to see
-:return: A photo object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1058,9 +1071,10 @@ and current_user (the user who is currently logged into the application).</p>
 <li><p><strong>current_user</strong> – User: Check if the user is authenticated</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The photo object</p>
+</dd>
 </dl>
-<p>:param : Get the current user
-:return: The photo object</p>
 </dd></dl>
 
 </section>
@@ -1078,9 +1092,10 @@ and current_user (the user who is currently logged into the application).</p>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository layer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of imagetagmodel objects</p>
+</dd>
 </dl>
-<p>:param : Get the current user and the db parameter is used to get a database session
-:return: A list of imagetagmodel objects</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1095,9 +1110,10 @@ and current_user (the user who is currently logged into the application).</p>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository layer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tag object</p>
+</dd>
 </dl>
-<p>:param : Get the current user from the database and pass it to the function
-:return: A tag object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1113,9 +1129,10 @@ and current_user (the user who is currently logged into the application).</p>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository layer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tags</p>
+</dd>
 </dl>
-<p>:param : Get the current user
-:return: A list of tags</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1125,7 +1142,7 @@ and current_user (the user who is currently logged into the application).</p>
 <dt>The remove_tag function removes a tag from the database.</dt><dd><dl class="simple">
 <dt>Args:</dt><dd><p>tag_id (int): The id of the tag to be removed.
 current_user (User): The user who is making this request.
-db (Session): A database session object for interacting with the database.</p>
+db (Session): A connection to the database, provided by FastAPI’s dependency injection system.</p>
 </dd>
 </dl>
 </dd>
@@ -1133,26 +1150,24 @@ db (Session): A database session object for interacting with the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag_id</strong> – int: Specify the tag_id of the tag to be removed</p></li>
-<li><p><strong>current_user</strong> – User: Get the current user from the database</p></li>
+<li><p><strong>tag_id</strong> – int: Specify the tag that will be removed</p></li>
+<li><p><strong>current_user</strong> – User: Check if the user is authenticated</p></li>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository layer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The removed tag</p>
+</dd>
 </dl>
-<p>:param : Get the tag id
-:return: The tag that was removed</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="app.routes.tags.update_tag">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.routes.tags.</span></span><span class="sig-name descname"><span class="pre">update_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#app.schemas.tags.ImageTagModel" title="app.schemas.tags.ImageTagModel"><span class="pre">ImageTagModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.routes.tags.update_tag" title="Link to this definition">¶</a></dt>
-<dd><dl>
+<dd><dl class="simple">
 <dt>The update_tag function updates a tag in the database.</dt><dd><p>The function takes an ImageTagModel object, which is used to update the tag’s name and description.
-It also takes a tag_id integer, which is used to identify the specific tag that will be updated.
-Finally, it takes two optional parameters: current_user (a User object) and db (a Session).</p>
-<blockquote>
-<div><p>These are both dependencies for this function; they are provided by other functions called within this one.</p>
-</div></blockquote>
+It also takes a tag_id, which is used to find the correct tag in the database.
+Finally it takes current_user and db as dependencies.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -1160,13 +1175,14 @@ Finally, it takes two optional parameters: current_user (a User object) and db (
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – ImageTagModel: Get the data from the request body</p></li>
 <li><p><strong>tag_id</strong> – int: Identify the tag to be updated</p></li>
-<li><p><strong>current_user</strong> – User: Get the current user</p></li>
+<li><p><strong>current_user</strong> – User: Get the current user from the auth_service</p></li>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository layer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tag object</p>
+</dd>
 </dl>
-<p>:param : Get the id of the tag to be updated
-:return: The updated tag</p>
 </dd></dl>
 
 </section>
@@ -1187,9 +1203,10 @@ Finally, it takes two optional parameters: current_user (a User object) and db (
 <li><p><strong>db</strong> – Session: Get a database session</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A streamingresponse object</p>
+</dd>
 </dl>
-<p>:param : Get the photo_id from the url
-:return: A streamingresponse object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1222,9 +1239,10 @@ Finally, it takes two optional parameters: current_user (a User object) and db (
 <li><p><strong>current_user</strong> – User: Get the current user from the database</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The photo object</p>
+</dd>
 </dl>
-<p>:param : Get the photo_id from the url
-:return: The photo object</p>
 </dd></dl>
 
 </section>
@@ -1341,9 +1359,10 @@ parameters:</p>
 <li><p><strong>db</strong> – Session: Pass the database session to the repository</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A user object</p>
+</dd>
 </dl>
-<p>:param : Get the current user
-:return: A user object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1410,9 +1429,10 @@ password (str): The new password for the user.</p>
 <li><p><strong>db</strong> – Session: Get the database session</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The user object</p>
+</dd>
 </dl>
-<p>:param : Get the current user information
-:return: The user object</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1435,9 +1455,10 @@ db (Session): A database session object for interacting with the database.</p>
 <li><p><strong>db</strong> – Session: Access the database</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The user object with the new avatar url</p>
+</dd>
 </dl>
-<p>:param : Get the current user from the database
-:return: The user object with the new avatar url</p>
 </dd></dl>
 
 </section>
@@ -2648,7 +2669,7 @@ credentials are correct.</p>
   <div>
     <h3><a href="#">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Welcome to Photo SHAKE App based on Rest API’s documentation!</a></li>
+<li><a class="reference internal" href="#">Welcome to Photo SHAKE App documentation!</a></li>
 <li><a class="reference internal" href="#module-main">Photo SHAKE App main</a><ul>
 <li><a class="reference internal" href="#main.healthchecker"><code class="docutils literal notranslate"><span class="pre">healthchecker()</span></code></a></li>
 <li><a class="reference internal" href="#main.root"><code class="docutils literal notranslate"><span class="pre">root()</span></code></a></li>
@@ -3040,8 +3061,8 @@ credentials are correct.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Photo SHAKE App based on Rest API  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Welcome to Photo SHAKE App based on Rest API’s documentation!</a></li> 
+        <li class="nav-item nav-item-0"><a href="#">Photo SHAKE App  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to Photo SHAKE App documentation!</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

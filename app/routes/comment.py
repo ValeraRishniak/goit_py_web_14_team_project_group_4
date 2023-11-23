@@ -41,7 +41,6 @@ async def create_comment(
     :param body: CommentBase: Get the body of the comment
     :param db: Session: Pass the database session to the repository layer
     :param current_user: User: Get the user who is currently logged in
-    :param : Get the image_id from the url and use it to create a comment for that specific image
     :return: A comment object
     """
 
@@ -68,7 +67,6 @@ async def edit_comment(
     :param body: CommentBase: Pass the new comment body to the function
     :param db: Session: Get the database session
     :param current_user: User: Get the current user from the auth_service
-    :param : Get the comment_id from the url
     :return: A commentbase object, which is a pydantic model
     """
 
@@ -100,7 +98,6 @@ async def delete_comment(
     :param comment_id: int: Specify the comment to delete
     :param db: Session: Get the database session
     :param current_user: User: Get the user who is making the request
-    :param : Get the comment id from the url
     :return: The deleted comment
     """
 
@@ -133,7 +130,6 @@ async def single_comment(
     :param comment_id: int: Get the comment_id from the url
     :param db: Session: Connect to the database
     :param current_user: User: Get the user who is currently logged in
-    :param : Get the comment id from the url
     :return: A comment object
     """
 
@@ -165,7 +161,6 @@ async def by_user_comments(
     :param user_id: int: Pass the user_id of the user whose comments are to be retrieved
     :param db: Session: Get the database session
     :param current_user: User: Get the user_id of the current user
-    :param : Get the user_id of the current user
     :return: A list of comments
     """
 
@@ -198,8 +193,6 @@ async def by_user_photo_comments(
     :param user_id: int: Get the user_id of the user who commented on a photo
     :param image_id: int: Identify the photo that the comment is associated with
     :param db: Session: Get the database session
-    :param current_user: User: Get the current user
-    :param : Get the user id of the photo owner
     :return: A list of comments
     """
     

@@ -40,7 +40,6 @@ async def signup(
     :param background_tasks: BackgroundTasks: Add tasks to the background task queue
     :param request: Request: Get the base url of the server
     :param db: Session: Get the database session
-    :param : Get the database session
     :return: A dictionary with two keys: user and detail
     """
     exist_user = await repository_users.get_user_by_email(body.email, db)
@@ -106,7 +105,6 @@ async def refresh_token(
     
     :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
     :param db: Session: Pass the database session to the function
-    :param : Get the user's email and the db parameter is used to update the refresh token in database
     :return: A dict with the keys access_token, refresh_token and token_type
     """
     token = credentials.credentials
@@ -146,7 +144,6 @@ async def request_email(
     :param background_tasks: BackgroundTasks: Add a task to the background_tasks queue
     :param request: Request: Get the base url of the application
     :param db: Session: Get the database session
-    :param : Get the user's email address
     :return: A dictionary {'message': 'check your email for confirmation'}
     """
     user = await repository_users.get_user_by_email(body.email, db)

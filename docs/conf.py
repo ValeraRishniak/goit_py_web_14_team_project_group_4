@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Photo SHAKE App based on Rest API'
+project = 'Photo SHAKE App'
 copyright = '2023, Team lead - Valerii Rishniak, Scrum master - Viktoriia Piatkovska, Developers - Anton Mescheryakov, Vladyslav Bondarenko'
 author = 'Team lead - Valerii Rishniak, Scrum master - Viktoriia Piatkovska, Developers - Anton Mescheryakov, Vladyslav Bondarenko'
 

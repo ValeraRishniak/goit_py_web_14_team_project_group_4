@@ -33,7 +33,6 @@ async def transform_method(
     :param body: TransformBodyModel: Get the body of the request
     :param db: Session: Access the database
     :param current_user: User: Get the current user from the database
-    :param : Get the photo_id from the url
     :return: The photo object
     """
     
@@ -57,7 +56,6 @@ async def show_qr(
     :param photo_id: int: Specify the photo that we want to get the qr code for
     :param current_user: User: Get the current user from the database
     :param db: Session: Get a database session
-    :param : Get the photo_id from the url
     :return: A streamingresponse object
     """
 

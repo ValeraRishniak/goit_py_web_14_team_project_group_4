@@ -50,7 +50,6 @@ async def see_my_photos(
     :param limit: int: Limit the number of photos returned
     :param current_user: User: Get the current user from the database
     :param db: Session: Access the database
-    :param : Skip the first n photos
     :return: A list of photos
     """
 
@@ -82,7 +81,6 @@ async def see_one_photo(
     :param photo_id: int: Get the id of the photo to be viewed
     :param db: Session: Pass a database session to the function
     :param current_user: User: Get the current user
-    :param : Get the id of the photo you want to see
     :return: A photo object
      """
     
@@ -119,7 +117,6 @@ async def create_photo(
     :param file: UploadFile: Get the file from the request
     :param db: Session: Get the database session
     :param current_user: User: Get the user that is currently logged in
-    :param : Get the current user
     :return: A tuple of the photo object and a list of tag objects
     """
 
@@ -153,7 +150,6 @@ async def update_description(
     :param tags: str: Update the tags of a photo
     :param db: Session: Pass a database session to the function
     :param current_user: User: Check if the user is authenticated
-    :param : Get the current user
     :return: The photo object
     """
 
@@ -188,7 +184,6 @@ async def remove_photo(
     :param photo_id: int: Get the photo id from the url
     :param db: Session: Pass the database session to the function
     :param current_user: User: Get the current user from the database
-    :param : Get the photo id from the url
     :return: A photo object
     """
     
