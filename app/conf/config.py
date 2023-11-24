@@ -21,7 +21,7 @@ def config_cloudinary():
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql+psycopg2://postgres:567234@localhost:5432/test-db-team-4"
+    database_url: str = "database_url"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
@@ -29,9 +29,9 @@ class Settings(BaseSettings):
     mail_from: str = "example@meta.ua"
     mail_port: int = 465
     mail_server: str = "smtp.meta.ua"
-    redis_host: str = "localhost"
+    redis_host: str = "redis_host"
     redis_port: int = 6379
-    redis_password: str = "secretPassword"
+    redis_password: str = "redis_password"
     cloudinary_name: str = "name"
     cloudinary_api_key: int = 716354361176382
     cloudinary_api_secret: str = "secret"
