@@ -2,9 +2,9 @@
 
 <p align="center">
    <img src="https://img.shields.io/badge/Language-Python-9cf">
-   <img src="https://img.shields.io/badge/FastAPI-0.95.1-brightgreen">
+   <img src="https://img.shields.io/badge/FastAPI-0.103.1-brightgreen">
    <img src="https://img.shields.io/badge/SQLAlchemy-2.0-orange">
-   <img src="https://img.shields.io/badge/Pytest-7.3.0-informational">
+   <img src="https://img.shields.io/badge/Pytest-7.4.3-informational">
    <img src="https://img.shields.io/badge/License-MIT-yellow">
 </p>
 
