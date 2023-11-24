@@ -86,7 +86,7 @@ async def update_user_inform(
     """
 
     user = db.query(User).filter_by(email=email).first()
-    user.password = password
+    user.password = auth_service.get_password_hash(password)
     user.username = username
     db.commit()
     return user
